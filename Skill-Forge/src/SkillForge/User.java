@@ -30,7 +30,7 @@ public  class User {
         jsonObject.put("username", this.userName);
         jsonObject.put("email", this.email);
         jsonObject.put("passwordHash", this.password);
-        jsonObject.put("role", this.password);
+        jsonObject.put("role", this.role);
         return jsonObject;
     }
 

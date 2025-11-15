@@ -25,15 +25,21 @@ public class SigningOperations {
 
     }
 
-  public static  boolean  signup(String email, String password,String username,String role) {
+  public static  boolean  signup(String id,String username,String email, String password,String role) {
         JSONArray jsonArray = db.readJsonArrayFromFile();
         String hashedPassword = PasswordHasher.hash(password);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject object = jsonArray.getJSONObject(i);
-            if(object.getString("email").equals(email)) {
+            if (object.getString("email").equals(email)) {
                 return false;
             }
         }
-        return  false;
-    }
+            User u = new User(id,username,email,hashedPassword,role);
+            JSONObject o = u.toJson();
+            jsonArray.put(o);
+            db.writeJsonArrayToFile(jsonArray);
+            return  true;
+        }
+
+
 }

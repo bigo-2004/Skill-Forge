@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UserJsonDatabase extends JsonDatabase {
-    private final String fileName = "user.json";
+
 
     public UserJsonDatabase(String fileName) {
         super(fileName);
@@ -25,8 +25,19 @@ public class UserJsonDatabase extends JsonDatabase {
         writeJsonArrayToFile(jsonArray);
     }
 
-    @Override
-    public void deleteObject(Object obj) {
+
+    public void deleteUser(User user) {
+
+        JSONArray oldJsonArray = readJsonArrayFromFile();
+        JSONArray newJsonArray = new JSONArray();
+        for(int i = 0; i < oldJsonArray.length(); i++){
+            JSONObject jsonObject = oldJsonArray.getJSONObject(i);
+            if(!jsonObject.get("id").equals(user.getUserId())){
+                newJsonArray.put(jsonObject);
+            }
+        }
+        writeJsonArrayToFile(newJsonArray);
+
     }
 
     @Override

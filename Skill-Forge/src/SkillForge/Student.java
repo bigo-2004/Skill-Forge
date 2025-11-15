@@ -10,10 +10,7 @@ public class Student extends User {
     private final  static String role = "student" ;
 
     public Student(String userId, String username, String email, String passwordHash) {
-        this.userId = userId;
-        this.username = username;
-        this.email = email;
-        this.passwordHash = passwordHash;
+       super(userId, username, email, passwordHash);
     }
     @Override
     public  Student fromJson(JSONObject obj) {
@@ -22,11 +19,12 @@ public class Student extends User {
     @Override
     public  JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", userId);
-        jsonObject.put("username", username);
-        jsonObject.put("email", email);
-        jsonObject.put("password", passwordHash);
+        jsonObject.put("id", getUserId());
+        jsonObject.put("username", getUserName());
+        jsonObject.put("email", getEmail());
+        jsonObject.put("password", getPassword());
         jsonObject.put("role", role);
         return jsonObject;
     }
+
 }

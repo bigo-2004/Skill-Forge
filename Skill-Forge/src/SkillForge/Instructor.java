@@ -3,10 +3,7 @@ package SkillForge;
 import org.json.JSONObject;
 
 public class Instructor extends User {
-    private String userId;
-    private String username;
-    private String email;
-    private String passwordHash;
+
     private final  static String role = "instructor";
 
     public Instructor(String userId, String username, String email, String passwordHash) {
@@ -14,7 +11,7 @@ public class Instructor extends User {
     }
     @Override
     public Instructor fromJson(JSONObject obj){
-        return new Instructor(userId, username, email, passwordHash);
+        return new Instructor(obj.getString("id"), obj.getString("username"), obj.getString("email"), obj.getString("password"));
 
     }
 

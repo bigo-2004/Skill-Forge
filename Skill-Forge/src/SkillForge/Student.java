@@ -3,10 +3,7 @@ package SkillForge;
 import org.json.JSONObject;
 
 public class Student extends User {
-    private String userId;
-    private String username;
-    private String email;
-    private String passwordHash;
+
     private final  static String role = "student" ;
 
     public Student(String userId, String username, String email, String passwordHash) {

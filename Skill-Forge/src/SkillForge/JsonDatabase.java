@@ -72,5 +72,5 @@ public abstract class JsonDatabase {
 
     public abstract void deleteObject(Object obj);
 
-    public abstract Object getObjectById(Object obj);
+    public abstract Object getObjectById(String id);
 }

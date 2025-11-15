@@ -46,11 +46,8 @@ public class UserJsonDatabase extends JsonDatabase {
         JSONArray jsonArray = readJsonArrayFromFile();
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            if(jsonObject.getString("id").equals(id) && jsonObject.getString("role").equals("student")) {
-                return new Student(jsonObject.getString("id"), jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
-            }
-            else if(jsonObject.getString("id").equals(id) && jsonObject.getString("role").equals("instructor")) {
-                return new Instructor(jsonObject.getString("id"), jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
+            if(jsonObject.getString("id").equals(id) ) {
+                return new User(jsonObject.getString("id"), jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("passwordHash"), jsonObject.getString("role"));
             }
         }
         return null;

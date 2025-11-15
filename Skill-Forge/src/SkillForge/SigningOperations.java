@@ -12,9 +12,9 @@ public class SigningOperations {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject object = jsonArray.getJSONObject(i);
-            String role = object.getString("role");
+            String storedPasswordHash = object.optString("passwordHash", "");
 
-            if (object.getString("email").equals(email) && object.getString( "passwordHash").equals("hashedPassword")) {
+            if (object.getString("email").equals(email) && hashedPassword.equals(storedPasswordHash)) {
                 return new User(object.getString("id"), object.getString("username"), object.getString("email"), object.getString("passwordHash"),object.getString("role"));
 
 

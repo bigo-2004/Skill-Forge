@@ -11,6 +11,7 @@ public class SkillForge {
         Instructor s3 = new Instructor("3","ragab","bigo@gmail.com","Sh-123");
         UserJsonDatabase db = new UserJsonDatabase("users.json");
          db.saveObject(s2);
+
          db.saveObject(s3);
 
 

@@ -73,6 +73,8 @@ public abstract class JsonDatabase {
 
     public abstract void saveObject(Object obj);
 
+    public abstract void updateObject(Object objOld , Object newObj);
+
 
     public abstract Object getObjectById(String id);
 }

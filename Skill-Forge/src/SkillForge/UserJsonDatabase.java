@@ -56,5 +56,20 @@ public class UserJsonDatabase extends JsonDatabase {
         return null;
     }
 
+    @Override
+    public void updateObject(Object oldObj, Object newObj) {
+        User userOld = (User) oldObj;
+        User userNew = (User) newObj;
+        JSONArray jsonArray = readJsonArrayFromFile();
+        for(int i = 0; i < jsonArray.length(); i++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            if(jsonObject.getString("id").equals(userOld.getUserId())){
+                jsonArray.put(i, userNew.toJson());
+                writeJsonArrayToFile(jsonArray);
+                return;
+            }
+        }
+    }
+
 
 }

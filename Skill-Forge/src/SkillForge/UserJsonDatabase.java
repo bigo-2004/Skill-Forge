@@ -2,6 +2,7 @@ package SkillForge;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class UserJsonDatabase extends JsonDatabase {
     private final String fileName = "user.json";
@@ -17,6 +18,11 @@ public class UserJsonDatabase extends JsonDatabase {
 
     @Override
     public void saveObject(Object obj) {
+        User user = (User) obj;
+        JSONArray jsonArray = readJsonArrayFromFile();
+        JSONObject jsonObject = user.toJson();
+        jsonArray.put(jsonObject);
+        writeJsonArrayToFile(jsonArray);
     }
 
     @Override

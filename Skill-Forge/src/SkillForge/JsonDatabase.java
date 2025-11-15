@@ -65,6 +65,10 @@ public abstract class JsonDatabase {
         }
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
     public abstract JSONArray loadAll();
     public abstract void saveObject(Object obj);
     public abstract void deleteObject(Object obj);

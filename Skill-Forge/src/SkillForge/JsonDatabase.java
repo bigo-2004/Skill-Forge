@@ -15,7 +15,7 @@ public abstract class JsonDatabase {
         createFileIfNotExisted();
     }
 
-    public void createFileIfNotExisted(){
+    public void createFileIfNotExisted() {
         File file = new File(fileName);
         try {
             if (!file.exists()) {
@@ -25,30 +25,30 @@ public abstract class JsonDatabase {
                 fw.close();
             }
 
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public JSONArray readJsonArrayFromFile(){
-        try{
+    public JSONArray readJsonArrayFromFile() {
+        try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             StringBuilder jsonToString = new StringBuilder();
             String line;
 
-            while((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 jsonToString.append(line);
             }
             br.close();
-            if(jsonToString.length() != 0){return new JSONArray();}
-            else
-            {
+            if (jsonToString.length() != 0) {
+                return new JSONArray();
+            } else {
                 return new JSONArray(jsonToString.toString());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return new JSONArray();
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return new JSONArray();
         }
@@ -56,8 +56,8 @@ public abstract class JsonDatabase {
 
     }
 
-    public void writeJsonArrayToFile(JSONArray jsonArray){
-        try{
+    public void writeJsonArrayToFile(JSONArray jsonArray) {
+        try {
             BufferedWriter br = new BufferedWriter(new FileWriter(fileName));
             br.write(jsonArray.toString(4)); //4 means print jsonArray  with 4 spaces per level
         } catch (IOException e) {
@@ -65,8 +65,12 @@ public abstract class JsonDatabase {
         }
     }
 
+
     public abstract JSONArray loadAll();
+
     public abstract void saveObject(Object obj);
+
     public abstract void deleteObject(Object obj);
+
     public abstract Object getObjectById(Object obj);
 }

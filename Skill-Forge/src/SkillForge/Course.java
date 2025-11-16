@@ -1,5 +1,6 @@
 package SkillForge;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -13,8 +14,9 @@ public class Course
     String courseStatus;
     String courseInstructor;
     ArrayList<Lesson> lessons;
+    ArrayList<Student> students;
 
-    public Course(String courseID, String courseTitle, String courseDescription, String courseStatus, String courseInstructor, ArrayList<Lesson> lessons)
+    public Course(String courseID, String courseTitle, String courseDescription, String courseStatus, String courseInstructor, ArrayList<Lesson> lessons, ArrayList<Student> students)
     {
         this.courseID = courseID;
         this.courseTitle = courseTitle;
@@ -22,6 +24,7 @@ public class Course
         this.courseStatus = courseStatus;
         this.courseInstructor = courseInstructor;
         this.lessons = lessons;
+        this.students = students;
     }
 
     //getters and setters
@@ -101,12 +104,17 @@ public class Course
 
     public JSONObject toJson() {  //from Object to JSONobject
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("course ID", this.courseID);
+        jsonObject.put("courseID", this.courseID);
         jsonObject.put("title", this.courseTitle);
         jsonObject.put("description", this.courseDescription);
-        jsonObject.put("course status", this.courseStatus);
+        jsonObject.put("status", this.courseStatus);
         jsonObject.put("instructor", this.courseInstructor); //TODO instructor name or ID
         jsonObject.put("lessons",lessons);
+        JSONArray studentsArray = new JSONArray();
+        for (Student s : students) {
+            studentsArray.put(s.getUserId());
+        }
+        jsonObject.put("students", studentsArray);
 
         return jsonObject;
     }

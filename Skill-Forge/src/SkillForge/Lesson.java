@@ -6,11 +6,11 @@ public class Lesson
     String lessonTitle;
     String lessonContent;
     String courseID;
+    boolean watched = false;
 
-
-    public void markAsWatched(User student)
+    public void markAsWatched(Student student)
     {
-        //TODO
+        watched = true;
     }
 
     public Lesson(String lessonID, String lessonTitle, String lessonContent, String courseID) {

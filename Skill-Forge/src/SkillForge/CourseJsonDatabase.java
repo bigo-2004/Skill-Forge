@@ -43,10 +43,11 @@ public class CourseJsonDatabase extends JsonDatabase
     @Override
     public Object getObjectById(String id) {
         JSONArray jsonArray = readJsonArrayFromFile();
+
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-            if (jsonObject.getString("course ID").equals(id)) {
+            if (jsonObject.getString("courseId").equals(id)) {
 
                 JSONArray lessonsArray = jsonObject.getJSONArray("lessons");
                 ArrayList<Lesson> lessons = new ArrayList<>();
@@ -60,17 +61,32 @@ public class CourseJsonDatabase extends JsonDatabase
                             lessonJson.getString("title"),
                             lessonJson.getString("content")
                     );
-
                     lessons.add(lesson);
                 }
 
+                JSONArray studentsArray = jsonObject.getJSONArray("students");
+                ArrayList<Student> students = new ArrayList<>();
+
+                for (int k = 0; k < studentsArray.length(); k++) {
+                    JSONObject studentJson = studentsArray.getJSONObject(k);
+
+                    Student student = new Student(
+                            studentJson.getString("studentId"),
+                            studentJson.getString("username"),
+                            studentJson.getString("email")
+                    );
+
+                    students.add(student);
+                }
+
                 return new Course(
-                        jsonObject.getString("course ID"),
+                        jsonObject.getString("courseID"),
                         jsonObject.getString("title"),
                         jsonObject.getString("description"),
-                        jsonObject.getString("course status"),
+                        jsonObject.getString("status"),
                         jsonObject.getString("instructor"),
-                        lessons
+                        lessons,
+                        students
                 );
             }
         }

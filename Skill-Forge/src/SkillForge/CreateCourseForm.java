@@ -1,5 +1,8 @@
 package SkillForge;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +33,7 @@ public class CreateCourseForm extends JFrame{
     }
 
     private void createCourse() {
+        CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
 
         String title = textField1.getText().trim();
         String description = textField2.getText().trim();
@@ -40,6 +44,16 @@ public class CreateCourseForm extends JFrame{
         }
 
         String courseId = textField3.getText();
+
+        JSONArray jsonArray = db.readJsonArrayFromFile();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+            if(jsonObject.getString("courseID ").equals(courseId)){
+                JOptionPane.showMessageDialog(null, "Course with this id already exists.");
+                return;
+            }
+        }
+
 
         ArrayList<Lesson> lessons = new ArrayList<>();
         ArrayList<Student> students = new ArrayList<>();
@@ -55,7 +69,9 @@ public class CreateCourseForm extends JFrame{
                 students
         );
 
-        CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+
+
+
         db.saveObject(newCourse);
         JOptionPane.showMessageDialog(null, "Course created successfully!");
         dispose();

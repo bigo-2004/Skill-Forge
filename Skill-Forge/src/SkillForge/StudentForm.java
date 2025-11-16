@@ -75,17 +75,13 @@ public class StudentForm extends JFrame{
                         return;
                     }
 
-                    // fixed method
                     course.getStudents().add(new Student(student.getUserId(), student.getUserName(), student.getEmail()));
-
-                    // updateObject will now find the course correctly
                     courseDB.updateObject(course, course);
 
                     JOptionPane.showMessageDialog(null, "Enrolled successfully!");
                     loadCoursesIntoTable();
 
                 } catch (Exception ex) {
-                    ex.printStackTrace(); // see exact error
                     JOptionPane.showMessageDialog(null, "Error enrolling in course.");
                 }
             }

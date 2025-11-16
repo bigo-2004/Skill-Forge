@@ -43,11 +43,35 @@ public class CourseJsonDatabase extends JsonDatabase
     @Override
     public Object getObjectById(String id) {
         JSONArray jsonArray = readJsonArrayFromFile();
-        for(int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-            if(jsonObject.getString("course ID").equals(id) ) {
-                return new Course(jsonObject.getString("course ID"), jsonObject.getString("title"), jsonObject.getString("description"), jsonObject.getString("course status"), jsonObject.getString("instructor"), (ArrayList<Lesson>) jsonObject.get("lessons"));
+            if (jsonObject.getString("course ID").equals(id)) {
+
+                JSONArray lessonsArray = jsonObject.getJSONArray("lessons");
+                ArrayList<Lesson> lessons = new ArrayList<>();
+
+                for (int j = 0; j < lessonsArray.length(); j++) {
+                    JSONObject lessonJson = lessonsArray.getJSONObject(j);
+
+                    Lesson lesson = new Lesson(
+                            lessonJson.getString("lessonId"),
+                            lessonJson.getString("courseId"),
+                            lessonJson.getString("title"),
+                            lessonJson.getString("content")
+                    );
+
+                    lessons.add(lesson);
+                }
+
+                return new Course(
+                        jsonObject.getString("course ID"),
+                        jsonObject.getString("title"),
+                        jsonObject.getString("description"),
+                        jsonObject.getString("course status"),
+                        jsonObject.getString("instructor"),
+                        lessons
+                );
             }
         }
         return null;

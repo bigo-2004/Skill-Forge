@@ -12,4 +12,11 @@ public class Lesson
     {
         //TODO
     }
+
+    public Lesson(String lessonID, String lessonTitle, String lessonContent, String courseID) {
+        this.lessonID = lessonID;
+        this.lessonTitle = lessonTitle;
+        this.lessonContent = lessonContent;
+        this.courseID = courseID;
+    }
 }

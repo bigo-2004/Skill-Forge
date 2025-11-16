@@ -19,6 +19,10 @@ public  class User {
 
     }
 
+    public String getRole() {
+        return role;
+    }
+
     public String getUserId() {
         return userId;
     }

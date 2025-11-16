@@ -10,8 +10,14 @@ public class LoginForm extends JFrame {
     private JButton loginButton;
     private JButton createNewAccountButton;
     private JPanel mainPanel;
+    private JRadioButton studentRadioButton;
+    private JRadioButton instructorRadioButton;
+    private ButtonGroup roleGroup = new ButtonGroup();
 
     public LoginForm() {
+
+        roleGroup.add(studentRadioButton);
+        roleGroup.add(instructorRadioButton);
 
         setTitle("Login");
         setContentPane(mainPanel);

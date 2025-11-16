@@ -32,7 +32,9 @@ public class CourseJsonDatabase extends JsonDatabase
         JSONArray jsonArray = readJsonArrayFromFile();
         for(int i = 0; i < jsonArray.length(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            if(jsonObject.getString("course ID").equals(courseOld.getCourseID())){
+
+            // FIX APPLIED HERE: Changed "course ID" to "courseID"
+            if(jsonObject.getString("courseID").equals(courseOld.getCourseID())){
                 jsonArray.put(i, courseNew.toJson());
                 writeJsonArrayToFile(jsonArray);
                 return;
@@ -47,20 +49,25 @@ public class CourseJsonDatabase extends JsonDatabase
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-            if (jsonObject.getString("courseId").equals(id)) {
-
+            if (jsonObject.getString("courseID").equals(id)) {
                 JSONArray lessonsArray = jsonObject.getJSONArray("lessons");
                 ArrayList<Lesson> lessons = new ArrayList<>();
 
                 for (int j = 0; j < lessonsArray.length(); j++) {
                     JSONObject lessonJson = lessonsArray.getJSONObject(j);
 
+                    // Note: Ensure your Lesson constructor matches this order (ID, Title, Content, CourseID)
                     Lesson lesson = new Lesson(
                             lessonJson.getString("lessonId"),
-                            lessonJson.getString("courseId"),
                             lessonJson.getString("title"),
-                            lessonJson.getString("content")
+                            lessonJson.getString("content"),
+                            id
                     );
+
+                    if (lessonJson.has("watched")) {
+                        lesson.setWatched(lessonJson.getBoolean("watched"));
+                    }
+
                     lessons.add(lesson);
                 }
 
@@ -68,15 +75,8 @@ public class CourseJsonDatabase extends JsonDatabase
                 ArrayList<Student> students = new ArrayList<>();
 
                 for (int k = 0; k < studentsArray.length(); k++) {
-                    JSONObject studentJson = studentsArray.getJSONObject(k);
-
-                    Student student = new Student(
-                            studentJson.getString("studentId"),
-                            studentJson.getString("username"),
-                            studentJson.getString("email")
-                    );
-
-                    students.add(student);
+                    String studentId = studentsArray.getString(k);
+                    students.add(new Student(studentId, "", ""));
                 }
 
                 return new Course(

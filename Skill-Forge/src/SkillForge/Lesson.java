@@ -2,11 +2,11 @@ package SkillForge;
 
 public class Lesson
 {
-    String lessonID;
-    String lessonTitle;
-    String lessonContent;
-    String courseID;
-    boolean watched = false;
+    private String lessonID;
+    private String lessonTitle;
+    private String lessonContent;
+    private String courseID;
+    private boolean watched = false;
 
     public void markAsWatched()
     {

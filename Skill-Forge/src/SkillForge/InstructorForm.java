@@ -46,9 +46,30 @@ public class InstructorForm extends JFrame {
         viewCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int selectedRow = table1.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a course.");
+                    return;
+                }
 
+                String courseId = (String) table1.getValueAt(selectedRow, 0);
+                if (courseId.equals("ID")) {
+                    JOptionPane.showMessageDialog(null, "Please select a valid course.");
+                    return;
+                }
+
+                CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+                Course course = (Course) db.getObjectById(courseId);
+
+                if (course == null) {
+                    JOptionPane.showMessageDialog(null, "Course not found.");
+                    return;
+                }
+
+                new CourseDetailsForm(course);
             }
         });
+
     }
 
     private void loadInstructorCourses() {

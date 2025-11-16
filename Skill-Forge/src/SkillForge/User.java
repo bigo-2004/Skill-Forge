@@ -10,7 +10,15 @@ public  class User {
     private String password;
     private String role;
 
-    public User(String userId, String userName, String email, String password,String role) {
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public User(String userId, String userName, String email, String password, String role) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;

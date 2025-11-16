@@ -16,6 +16,10 @@ public class Course
     ArrayList<Lesson> lessons;
     ArrayList<Student> students;
 
+    public ArrayList<Student> getStudents() {
+        return students;
+    }
+
     public Course(String courseID, String courseTitle, String courseDescription, String courseStatus, String courseInstructor, ArrayList<Lesson> lessons, ArrayList<Student> students)
     {
         this.courseID = courseID;

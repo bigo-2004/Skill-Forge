@@ -4,20 +4,19 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class CreateCourseForm extends JFrame{
     private JButton saveButton;
     private JTextField textField1;
     private JTextField textField2;
     private JPanel mainPanel;
+    private JTextField textField3;
     private User instructor;
 
     public CreateCourseForm(User instructor){
         this.instructor=instructor;
         setTitle("Create course");
         setContentPane(mainPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 250);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -40,7 +39,7 @@ public class CreateCourseForm extends JFrame{
             return;
         }
 
-        String courseId = UUID.randomUUID().toString();
+        String courseId = textField3.getText();
 
         ArrayList<Lesson> lessons = new ArrayList<>();
         ArrayList<Student> students = new ArrayList<>();

@@ -3,6 +3,9 @@ package SkillForge;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,6 +39,14 @@ public class StudentForm extends JFrame{
             }
         });
 
+        CoursesTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    viewCourseDetails();
+                }
+            }
+        });
 
         enrollButton.addActionListener(new ActionListener() {
             @Override
@@ -88,6 +99,29 @@ public class StudentForm extends JFrame{
         });
     }
 
+    private void viewCourseDetails() {
+        int selectedRow = CoursesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a course to view details.");
+            return;
+        }
+
+        String courseId = (String) CoursesTable.getValueAt(selectedRow, 0);
+        if (courseId.equals("ID")) {
+            JOptionPane.showMessageDialog(null, "Please select a valid course.");
+            return;
+        }
+
+        CourseJsonDatabase courseDB = new CourseJsonDatabase("courses.json");
+        Course course = (Course) courseDB.getObjectById(courseId);
+
+        if (course == null) {
+            JOptionPane.showMessageDialog(null, "Course not found.");
+            return;
+        }
+
+        new ViewLessonsForm(course);
+    }
 
         private void loadCoursesIntoTable() {
 

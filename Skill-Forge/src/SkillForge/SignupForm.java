@@ -13,7 +13,6 @@ public class SignupForm extends JFrame{
     private JRadioButton instructorRadioButton;
     private JButton returnToLoginPageButton;
     private JPanel mainPanel;
-    private JTextField textField4;
     private ButtonGroup roleGroup = new ButtonGroup();
 
     public SignupForm() {
@@ -32,37 +31,6 @@ public class SignupForm extends JFrame{
         returnToLoginPageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                new LoginForm();
-            }
-        });
-        createAccountButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = textField1.getText();
-                String email = textField2.getText();
-                String pd = textField3.getText();
-                String id =textField4.getText();
-                String role=null;
-                if(studentRadioButton.isSelected()){
-                    role="Student";
-                }
-                else if(instructorRadioButton.isSelected()){
-                    role="Instructor";
-                }
-
-                if (username.isEmpty() || email.isEmpty() || pd.isEmpty()  || (!studentRadioButton.isSelected() && !instructorRadioButton.isSelected()))
-                {
-                    JOptionPane.showMessageDialog(null, "Please fill all fields and select a role.");
-                    return;
-                }
-
-                if(SigningOperations.signup(id ,username,email,pd,role)){
-                    JOptionPane.showMessageDialog(null, "User added successfully");
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "User already exist");
-                }
                 dispose();
                 new LoginForm();
             }

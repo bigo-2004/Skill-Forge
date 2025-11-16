@@ -3,48 +3,7 @@ package SkillForge;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public  class User {
-    private String userId;
-    private String userName;
-    private String email;
-    private String password;
-    private String role;
-
-    public User(String userId, String userName, String email, String password,String role) {
-        this.userId = userId;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-
-    public   JSONObject toJson() {  //from Object to JSONobject
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", this.userId);
-        jsonObject.put("username", this.userName);
-        jsonObject.put("email", this.email);
-        jsonObject.put("passwordHash", this.password);
-        jsonObject.put("role", this.role);
-        return jsonObject;
-    }
-
-    public  User fromJson(JSONObject obj) {  //from JSONobject to object
-        return new User(obj.getString("id"), obj.getString("username"), obj.getString("email"), obj.getString("passwordHash"),obj.getString("role"));
-    }
-
-
-
-
-
-
+public abstract class User {
+    public abstract  JSONObject toJson(); //from Object to JSONobject
+    public  abstract  Object fromJson(JSONObject obj); //from JSONobject to object
 }

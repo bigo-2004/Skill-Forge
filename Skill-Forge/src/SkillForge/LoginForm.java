@@ -41,6 +41,11 @@ public class LoginForm extends JFrame {
                     return;
                 }
 
+                if(!Validations.isValidEmail(email)) {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Invalid email!");
+                    return;
+                }
+
                 if (password.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Enter your password!");
                     return;

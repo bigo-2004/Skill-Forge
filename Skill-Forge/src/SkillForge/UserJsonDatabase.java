@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UserJsonDatabase extends JsonDatabase {
-    private final String fileName = "user.json";
+
 
     public UserJsonDatabase(String fileName) {
         super(fileName);
@@ -25,8 +25,19 @@ public class UserJsonDatabase extends JsonDatabase {
         writeJsonArrayToFile(jsonArray);
     }
 
-    @Override
-    public void deleteObject(Object obj) {
+
+    public void deleteUser(User user) {
+
+        JSONArray oldJsonArray = readJsonArrayFromFile();
+        JSONArray newJsonArray = new JSONArray();
+        for(int i = 0; i < oldJsonArray.length(); i++){
+            JSONObject jsonObject = oldJsonArray.getJSONObject(i);
+            if(!jsonObject.get("id").equals(user.getUserId())){
+                newJsonArray.put(jsonObject);
+            }
+        }
+        writeJsonArrayToFile(newJsonArray);
+
     }
 
     @Override
@@ -35,14 +46,26 @@ public class UserJsonDatabase extends JsonDatabase {
         JSONArray jsonArray = readJsonArrayFromFile();
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            if(jsonObject.getString("id").equals(id) && jsonObject.getString("role").equals("student")) {
-                return new Student(jsonObject.getString("id"), jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
-            }
-            else if(jsonObject.getString("id").equals(id) && jsonObject.getString("role").equals("instructor")) {
-                return new Instructor(jsonObject.getString("id"), jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
+            if(jsonObject.getString("id").equals(id) ) {
+                return new User(jsonObject.getString("id"), jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("passwordHash"), jsonObject.getString("role"));
             }
         }
         return null;
+    }
+
+    @Override
+    public void updateObject(Object oldObj, Object newObj) {
+        User userOld = (User) oldObj;
+        User userNew = (User) newObj;
+        JSONArray jsonArray = readJsonArrayFromFile();
+        for(int i = 0; i < jsonArray.length(); i++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            if(jsonObject.getString("id").equals(userOld.getUserId())){
+                jsonArray.put(i, userNew.toJson());
+                writeJsonArrayToFile(jsonArray);
+                return;
+            }
+        }
     }
 
 

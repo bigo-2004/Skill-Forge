@@ -30,5 +30,39 @@ public class LoginForm extends JFrame {
         });
 
 
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String email = textField1.getText().trim();
+                String password = new String(passwordField1.getPassword());
+
+                if (email.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Enter your email!");
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Enter your password!");
+                    return;
+                }
+
+                User x = SigningOperations.login(email, password);
+
+                if (x == null) {
+                    JOptionPane.showMessageDialog(null, "Invalid email or password!");
+                    return;
+                }
+
+                if (x.getRole().equals("Student")) {
+                    new StudentForm();
+                    dispose();
+                }
+                else if (x.getRole().equals("Instructor")) {
+                    //new InstructorForm();
+                    dispose();
+                }
+            }
+
+        });
     }
 }

@@ -39,8 +39,9 @@ public abstract class JsonDatabase {
             while ((line = br.readLine()) != null) {
                 jsonToString.append(line);
             }
+
             br.close();
-            if (jsonToString.length() != 0) {
+            if (jsonToString.length() == 0) {
                 return new JSONArray();
             } else {
                 return new JSONArray(jsonToString.toString());
@@ -50,7 +51,7 @@ public abstract class JsonDatabase {
             return new JSONArray();
         } catch (IOException e) {
             e.printStackTrace();
-            return new JSONArray();
+           return new JSONArray();
         }
 
 
@@ -60,6 +61,8 @@ public abstract class JsonDatabase {
         try {
             BufferedWriter br = new BufferedWriter(new FileWriter(fileName));
             br.write(jsonArray.toString(4)); //4 means print jsonArray  with 4 spaces per level
+            br.flush();
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,7 +73,7 @@ public abstract class JsonDatabase {
 
     public abstract void saveObject(Object obj);
 
-    public abstract void deleteObject(Object obj);
+    public abstract void updateObject(Object objOld , Object newObj);
 
     public abstract Object getObjectById(String id);
 }

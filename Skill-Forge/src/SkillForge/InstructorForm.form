@@ -15,7 +15,7 @@
     <children>
       <component id="9ca83" class="javax.swing.JButton" binding="addCourseButton">
         <constraints>
-          <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="411" height="34"/>
           </grid>
         </constraints>
@@ -63,8 +63,8 @@
       </component>
       <component id="cacf1" class="javax.swing.JButton" binding="viewCourseButton" default-binding="true">
         <constraints>
-          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="411" height="34"/>
+          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="236" height="34"/>
           </grid>
         </constraints>
         <properties>
@@ -81,21 +81,6 @@
         </constraints>
         <properties/>
       </component>
-      <component id="d2770" class="javax.swing.JButton" binding="logoutButton" default-binding="true">
-        <constraints>
-          <grid row="6" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="200" height="34"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background color="-9731951"/>
-          <doubleBuffered value="true"/>
-          <font size="16"/>
-          <foreground color="-1769467"/>
-          <horizontalTextPosition value="0"/>
-          <text value="Logout"/>
-        </properties>
-      </component>
       <component id="23aa2" class="javax.swing.JLabel">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -108,6 +93,38 @@
       <component id="4b555" class="javax.swing.JLabel">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=" "/>
+        </properties>
+      </component>
+      <component id="28914" class="javax.swing.JButton" binding="reloadButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-9731951"/>
+          <text value="Reload"/>
+        </properties>
+      </component>
+      <component id="d2770" class="javax.swing.JButton" binding="logoutButton" default-binding="true">
+        <constraints>
+          <grid row="5" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="34"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-9731951"/>
+          <doubleBuffered value="true"/>
+          <font size="16"/>
+          <foreground color="-1769467"/>
+          <horizontalTextPosition value="0"/>
+          <text value="Logout"/>
+        </properties>
+      </component>
+      <component id="7d4d3" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value=" "/>

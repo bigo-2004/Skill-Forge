@@ -13,6 +13,7 @@ public class InstructorForm extends JFrame {
     private JButton logoutButton;
     private JPanel mainPanel;
     private JTable table1;
+    private JButton reloadButton;
 
     private User instructor;
 
@@ -70,6 +71,12 @@ public class InstructorForm extends JFrame {
             }
         });
 
+        reloadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadInstructorCourses();
+            }
+        });
     }
 
     private void loadInstructorCourses() {

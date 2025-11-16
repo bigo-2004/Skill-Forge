@@ -5,6 +5,7 @@ import javax.swing.*;
 public class ViewLessonsForm extends JFrame {
 
     private JPanel mainPanel;
+    private JTable table1;
 
     public ViewLessonsForm(){
         setTitle("Lessons Dashboard");

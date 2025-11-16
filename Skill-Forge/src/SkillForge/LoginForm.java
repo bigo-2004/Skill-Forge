@@ -78,11 +78,11 @@ public class LoginForm extends JFrame {
 
 
                 if (u != null && expectedRole.equals("Student") ) {
-                    new StudentForm();
+                    new StudentForm(u);
                     dispose();
                 }
                 else if (u != null && expectedRole.equals("Instructor") ) {
-                    new InstructorForm();
+                    new InstructorForm(u);
                     dispose();
                 }
 

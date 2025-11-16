@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public class SigningOperations {
     private static final UserJsonDatabase db = new UserJsonDatabase("users.json");
 
-    public static User login(String email, String password) {
+    public static User login(String email, String password , String expectedRole) {
         JSONArray jsonArray = db.readJsonArrayFromFile();
         String hashedPassword = PasswordHasher.hash(password);
 
@@ -14,9 +14,9 @@ public class SigningOperations {
             JSONObject object = jsonArray.getJSONObject(i);
             String storedPasswordHash = object.optString("passwordHash", "");
 
-            if (object.getString("email").equals(email) && hashedPassword.equals(storedPasswordHash) && object.getString("role").equals("Student")) {
+            if (object.getString("email").equals(email) && hashedPassword.equals(storedPasswordHash) && expectedRole.equals(object.getString("role"))  ) {
                 return new Student(object.getString("id"), object.getString("username"), object.getString("email"), object.getString("passwordHash"), object.getString("role"));
-            } else if (object.getString("email").equals(email) && hashedPassword.equals(storedPasswordHash) && object.getString("role").equals("Instructor")) {
+            } else if (object.getString("email").equals(email) && hashedPassword.equals(storedPasswordHash) && expectedRole.equals(object.getString("role"))) {
                 return new Instructor(object.getString("id"), object.getString("username"), object.getString("email"), object.getString("passwordHash"), object.getString("role"));
             }
         }

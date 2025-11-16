@@ -42,6 +42,11 @@ public class LoginForm extends JFrame {
                 String email = textField1.getText().trim();
                 String password = new String(passwordField1.getPassword());
 
+                if(!studentRadioButton.isSelected() && !instructorRadioButton.isSelected()) {
+                    JOptionPane.showMessageDialog(LoginForm.this, "Please select a student or instructor");
+                    return;
+                }
+
                 if (email.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Enter your email!");
                     return;
@@ -56,22 +61,31 @@ public class LoginForm extends JFrame {
                     JOptionPane.showMessageDialog(null, "Enter your password!");
                     return;
                 }
+                String expectedRole = null;
+                if(studentRadioButton.isSelected()) {
+                    expectedRole = "Student";
+                }
+                else if(instructorRadioButton.isSelected()) {
+                    expectedRole = "Instructor";
+                }
+                User u = SigningOperations.login(email, password,expectedRole);
 
-                User x = SigningOperations.login(email, password);
-
-                if (x == null) {
+                if(u == null) {
                     JOptionPane.showMessageDialog(null, "Invalid email or password!");
                     return;
                 }
 
-                if (x.getRole().equals("Student")) {
+
+
+                if (u != null && expectedRole.equals("Student") ) {
                     new StudentForm();
                     dispose();
                 }
-                else if (x.getRole().equals("Instructor")) {
+                else if (u != null && expectedRole.equals("Instructor") ) {
                     new InstructorForm();
                     dispose();
                 }
+
             }
 
         });

@@ -58,7 +58,7 @@ public class LoginForm extends JFrame {
                     dispose();
                 }
                 else if (x.getRole().equals("Instructor")) {
-                    //new InstructorForm();
+                    new InstructorForm();
                     dispose();
                 }
             }

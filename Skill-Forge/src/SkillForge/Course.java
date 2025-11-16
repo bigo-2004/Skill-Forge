@@ -109,7 +109,19 @@ public class Course
         jsonObject.put("description", this.courseDescription);
         jsonObject.put("status", this.courseStatus);
         jsonObject.put("instructor", this.courseInstructor); //TODO instructor name or ID
-        jsonObject.put("lessons",lessons);
+        JSONArray lessonsArray = new JSONArray();
+
+        for (Lesson l : lessons) {
+            JSONObject lessonJson = new JSONObject();
+            lessonJson.put("lessonId", l.getLessonID());
+            lessonJson.put("title", l.getLessonTitle());
+            lessonJson.put("content", l.getLessonContent());
+            lessonJson.put("watched", l.isWatched());
+
+            lessonsArray.put(lessonJson);
+        }
+
+        jsonObject.put("lessons", lessonsArray);
         JSONArray studentsArray = new JSONArray();
         for (Student s : students) {
             studentsArray.put(s.getUserId());

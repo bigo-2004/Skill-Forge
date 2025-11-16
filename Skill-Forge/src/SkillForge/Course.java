@@ -1,4 +1,4 @@
-﻿package SkillForge;
+package SkillForge;
 
 import org.json.JSONObject;
 

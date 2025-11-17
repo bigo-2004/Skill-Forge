@@ -92,4 +92,18 @@ public class CourseJsonDatabase extends JsonDatabase
         }
         return null;
     }
+    public void deleteObject(String id) {
+        JSONArray jsonArray = readJsonArrayFromFile();
+
+        for (int i = jsonArray.length() - 1; i >= 0; i--) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+            if (jsonObject.getString("courseID").equals(id)) {
+                jsonArray.remove(i);
+                writeJsonArrayToFile(jsonArray);
+                return;
+            }
+        }
+    }
+
 }

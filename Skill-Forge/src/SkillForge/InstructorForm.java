@@ -14,6 +14,7 @@ public class InstructorForm extends JFrame {
     private JPanel mainPanel;
     private JTable table1;
     private JButton reloadButton;
+    private JButton deleteCourseButton;
 
     private User instructor;
 
@@ -22,7 +23,7 @@ public class InstructorForm extends JFrame {
         setTitle("Instructor Dashboard");
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 500);
+        setSize(800, 500);
         setLocationRelativeTo(null);
         setVisible(true);
 
@@ -36,14 +37,13 @@ public class InstructorForm extends JFrame {
             }
         });
 
-
         addCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new CreateCourseForm(instructor);
-                loadInstructorCourses();
             }
         });
+
         viewCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,10 +66,18 @@ public class InstructorForm extends JFrame {
                     JOptionPane.showMessageDialog(null, "Course not found.");
                     return;
                 }
-
                 new CourseDetailsForm(course);
             }
         });
+
+        if (deleteCourseButton != null) {
+            deleteCourseButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    deleteCourse();
+                }
+            });
+        }
 
         reloadButton.addActionListener(new ActionListener() {
             @Override
@@ -79,7 +87,7 @@ public class InstructorForm extends JFrame {
         });
     }
 
-    private void loadInstructorCourses() {
+    public void loadInstructorCourses() {
 
         String[] columns = {"Course ID", "Title", "Description", "Status", "Enrolled Students"};
 
@@ -121,7 +129,31 @@ public class InstructorForm extends JFrame {
         }
     }
 
+    private void deleteCourse() {
+        int selectedRow = table1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a course to delete.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
+        String courseId = (String) table1.getValueAt(selectedRow, 0);
+        String courseTitle = (String) table1.getValueAt(selectedRow, 1);
 
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to permanently delete the course: " + courseTitle + " (" + courseId + ")?",
+                "Confirm Course Deletion", JOptionPane.YES_NO_OPTION);
 
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+            db.deleteObject(courseId);
+            loadInstructorCourses();
+            JOptionPane.showMessageDialog(this, "Course '" + courseTitle + "' deleted successfully.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error deleting course: " + ex.getMessage());
+        }
+    }
 }

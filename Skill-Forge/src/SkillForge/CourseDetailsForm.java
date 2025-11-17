@@ -17,7 +17,7 @@ public class CourseDetailsForm extends JFrame {
     private JButton addLessonButton;
     private JButton editLessonButton;
     private JButton removeStudentButton;
-    private JButton deleteLessonButton; // The correct name from your form
+    private JButton deleteLessonButton;
     private JButton reloadButton;
 
     private Course course;
@@ -63,6 +63,7 @@ public class CourseDetailsForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadLessons();
+                loadStudents();
             }
         });
     }
@@ -76,6 +77,10 @@ public class CourseDetailsForm extends JFrame {
         }
 
         String lessonId = (String) lessonsTable.getValueAt(selectedRow, 0);
+        if (lessonId.equals("ID")) {
+            JOptionPane.showMessageDialog(this, "Please select a valid lesson.");
+            return;
+        }
 
         Lesson lessonToEdit = null;
         for (Lesson lesson : course.getLessons()) {
@@ -101,6 +106,12 @@ public class CourseDetailsForm extends JFrame {
         }
 
         String lessonIdToRemove = (String) lessonsTable.getValueAt(selectedRow, 0);
+
+        if (lessonIdToRemove.equals("ID")) {
+            JOptionPane.showMessageDialog(this, "Please select a valid lesson.");
+            return;
+        }
+
         String lessonTitle = (String) lessonsTable.getValueAt(selectedRow, 1);
 
         int confirm = JOptionPane.showConfirmDialog(this,
@@ -144,6 +155,12 @@ public class CourseDetailsForm extends JFrame {
         }
 
         String studentIdToRemove = (String) studentsTable.getValueAt(selectedRow, 0);
+
+        if (studentIdToRemove.equals("ID")) {
+            JOptionPane.showMessageDialog(this, "Please select a valid student.");
+            return;
+        }
+
         String studentName = (String) studentsTable.getValueAt(selectedRow, 1);
 
         int confirm = JOptionPane.showConfirmDialog(this,
@@ -191,6 +208,9 @@ public class CourseDetailsForm extends JFrame {
         lessonsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         lessonsTable.setFillsViewportHeight(true);
 
+        String[] defaultLessonRow = {"ID", "Title", "Content"};
+        model.addRow(defaultLessonRow);
+
         for (Lesson lesson : course.getLessons()) {
             String[] row = {lesson.getLessonID(), lesson.getLessonTitle(), lesson.getLessonContent()};
             model.addRow(row);
@@ -210,6 +230,9 @@ public class CourseDetailsForm extends JFrame {
         studentsTable.getTableHeader().setReorderingAllowed(false);
         studentsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         studentsTable.setFillsViewportHeight(true);
+
+        String[] defaultStudentRow = {"ID", "Username", "Email"};
+        model.addRow(defaultStudentRow);
 
         UserJsonDatabase userDb = new UserJsonDatabase("users.json");
 

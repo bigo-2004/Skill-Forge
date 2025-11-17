@@ -2,12 +2,16 @@ package SkillForge;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ViewLessonsForm extends JFrame {
 
     private JPanel mainPanel;
     private JTable table1;
+    private JButton markCompletedButton;
     private Course course;
 
     public ViewLessonsForm(Course course){
@@ -16,15 +20,66 @@ public class ViewLessonsForm extends JFrame {
         setTitle("Lessons for: " + course.getCourseTitle());
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 400);
+        setSize(700, 500);
         setLocationRelativeTo(null);
         setVisible(true);
 
         loadLessons();
+
+        if (markCompletedButton != null) {
+            markCompletedButton.addActionListener(e -> markLessonAsCompleted());
+        }
     }
 
+    private void markLessonAsCompleted() {
+        int selectedRow = table1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a lesson to mark as completed.");
+            return;
+        }
+
+        String lessonId = (String) table1.getValueAt(selectedRow, 0);
+
+        if (lessonId.equals("ID")) {
+            JOptionPane.showMessageDialog(this, "Please select a valid lesson.");
+            return;
+        }
+
+        Lesson lessonToMark = null;
+        for (Lesson lesson : course.getLessons()) {
+            if (lesson.getLessonID().equals(lessonId)) {
+                lessonToMark = lesson;
+                break;
+            }
+        }
+
+        if (lessonToMark == null) {
+            JOptionPane.showMessageDialog(this, "Lesson not found.");
+            return;
+        }
+
+        if (lessonToMark.isWatched()) {
+            JOptionPane.showMessageDialog(this, lessonToMark.getLessonTitle() + " is already marked as completed.");
+            return;
+        }
+
+        lessonToMark.setWatched(true);
+
+        try {
+            CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+            db.updateObject(course, course);
+
+            loadLessons();
+            JOptionPane.showMessageDialog(this, lessonToMark.getLessonTitle() + " marked as completed! ");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error saving completion status: " + ex.getMessage());
+        }
+    }
+
+
     private void loadLessons() {
-        String[] columns = {"Lesson ID", "Title", "Content"};
+        String[] columns = {"Lesson ID", "Title", "Content", "Status"};
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
@@ -36,8 +91,18 @@ public class ViewLessonsForm extends JFrame {
         table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table1.setFillsViewportHeight(true);
 
+        String[] defaultRow = {"ID", "Title", "Content", "Completed"};
+        model.addRow(defaultRow);
+
         for (Lesson lesson : course.getLessons()) {
-            String[] row = {lesson.getLessonID(), lesson.getLessonTitle(), lesson.getLessonContent()};
+            String status = lesson.isWatched() ? "Completed" : "Pending";
+
+            String[] row = {
+                    lesson.getLessonID(),
+                    lesson.getLessonTitle(),
+                    lesson.getLessonContent(),
+                    status
+            };
             model.addRow(row);
         }
     }

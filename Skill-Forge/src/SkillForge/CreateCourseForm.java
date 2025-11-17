@@ -48,7 +48,7 @@ public class CreateCourseForm extends JFrame{
         JSONArray jsonArray = db.readJsonArrayFromFile();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            if(jsonObject.getString("courseID ").equals(courseId)){
+            if(jsonObject.getString("courseID").equals(courseId)){
                 JOptionPane.showMessageDialog(null, "Course with this id already exists.");
                 return;
             }

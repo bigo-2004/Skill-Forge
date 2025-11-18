@@ -4,12 +4,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class InstructorForm extends JFrame {
     private JButton addCourseButton;
-    private JButton viewCourseButton;
     private JButton logoutButton;
     private JPanel mainPanel;
     private JTable table1;
@@ -44,29 +45,12 @@ public class InstructorForm extends JFrame {
             }
         });
 
-        viewCourseButton.addActionListener(new ActionListener() {
+        table1.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = table1.getSelectedRow();
-                if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(null, "Please select a course.");
-                    return;
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    viewCourseDetails();
                 }
-
-                String courseId = (String) table1.getValueAt(selectedRow, 0);
-                if (courseId.equals("ID")) {
-                    JOptionPane.showMessageDialog(null, "Please select a valid course.");
-                    return;
-                }
-
-                CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
-                Course course = (Course) db.getObjectById(courseId);
-
-                if (course == null) {
-                    JOptionPane.showMessageDialog(null, "Course not found.");
-                    return;
-                }
-                new CourseDetailsForm(course);
             }
         });
 
@@ -86,6 +70,26 @@ public class InstructorForm extends JFrame {
             }
         });
     }
+
+    private void viewCourseDetails() {
+        int selectedRow = table1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a course.");
+            return;
+        }
+
+        String courseId = (String) table1.getValueAt(selectedRow, 0);
+
+        CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+        Course course = (Course) db.getObjectById(courseId);
+
+        if (course == null) {
+            JOptionPane.showMessageDialog(null, "Course not found.");
+            return;
+        }
+        new CourseDetailsForm(course);
+    }
+
 
     public void loadInstructorCourses() {
 
@@ -131,7 +135,7 @@ public class InstructorForm extends JFrame {
     private void deleteCourse() {
         int selectedRow = table1.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a course to delete.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a course to delete.");
             return;
         }
 

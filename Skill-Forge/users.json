@@ -1,0 +1,16 @@
+[
+    {
+        "role": "Student",
+        "id": "1",
+        "email": "bigo@gmail.com",
+        "passwordHash": "3bea5bbe2d3e5ff7bd9132c87a441272f0b3ea5fc6e7f3bbfcaed2cae8b8e0d2",
+        "username": "Bigo Ragab"
+    },
+    {
+        "role": "Instructor",
+        "id": "2",
+        "email": "bigo@yahoo.com",
+        "passwordHash": "3bea5bbe2d3e5ff7bd9132c87a441272f0b3ea5fc6e7f3bbfcaed2cae8b8e0d2",
+        "username": "Bigo Not Ragab"
+    }
+]

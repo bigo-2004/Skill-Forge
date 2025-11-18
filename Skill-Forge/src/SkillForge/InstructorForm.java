@@ -103,8 +103,7 @@ public class InstructorForm extends JFrame {
         table1.getTableHeader().setReorderingAllowed(false);
         table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table1.setFillsViewportHeight(true);
-        String[] defaultRow = {"ID", "Title", "Description", "Status", "Enrolled"};
-        model.addRow(defaultRow);
+
 
         CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
         JSONArray arr = db.loadAll();

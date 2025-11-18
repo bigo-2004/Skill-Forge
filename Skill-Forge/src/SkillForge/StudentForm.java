@@ -59,10 +59,6 @@ public class StudentForm extends JFrame{
                 }
 
                 String courseId = (String) CoursesTable.getValueAt(selectedRow, 0);
-                if (courseId.equals("ID")) {
-                    JOptionPane.showMessageDialog(null, "Please select a valid course.");
-                    return;
-                }
 
                 try {
                     CourseJsonDatabase courseDB = new CourseJsonDatabase("courses.json");
@@ -139,8 +135,7 @@ public class StudentForm extends JFrame{
             CoursesTable.getTableHeader().setReorderingAllowed(false);
             CoursesTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             CoursesTable.setFillsViewportHeight(true);
-            String[] defaultRow = {"ID", "Title", "Instructor", "Status"};
-            model.addRow(defaultRow);
+
 
             CourseJsonDatabase courseDB = new CourseJsonDatabase("courses.json");
             JSONArray arr = courseDB.loadAll();

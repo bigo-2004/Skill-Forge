@@ -40,10 +40,6 @@ public class ViewLessonsForm extends JFrame {
 
         String lessonId = (String) table1.getValueAt(selectedRow, 0);
 
-        if (lessonId.equals("ID")) {
-            JOptionPane.showMessageDialog(this, "Please select a valid lesson.");
-            return;
-        }
 
         Lesson lessonToMark = null;
         for (Lesson lesson : course.getLessons()) {
@@ -91,8 +87,6 @@ public class ViewLessonsForm extends JFrame {
         table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table1.setFillsViewportHeight(true);
 
-        String[] defaultRow = {"ID", "Title", "Content", "Completed"};
-        model.addRow(defaultRow);
 
         for (Lesson lesson : course.getLessons()) {
             String status = lesson.isWatched() ? "Completed" : "Pending";

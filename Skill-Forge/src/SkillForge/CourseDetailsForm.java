@@ -208,8 +208,6 @@ public class CourseDetailsForm extends JFrame {
         lessonsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         lessonsTable.setFillsViewportHeight(true);
 
-        String[] defaultLessonRow = {"ID", "Title", "Content"};
-        model.addRow(defaultLessonRow);
 
         for (Lesson lesson : course.getLessons()) {
             String[] row = {lesson.getLessonID(), lesson.getLessonTitle(), lesson.getLessonContent()};
@@ -231,8 +229,6 @@ public class CourseDetailsForm extends JFrame {
         studentsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         studentsTable.setFillsViewportHeight(true);
 
-        String[] defaultStudentRow = {"ID", "Username", "Email"};
-        model.addRow(defaultStudentRow);
 
         UserJsonDatabase userDb = new UserJsonDatabase("users.json");
 

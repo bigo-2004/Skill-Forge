@@ -19,6 +19,13 @@ public class CourseDetailsForm extends JFrame {
     private JButton removeStudentButton;
     private JButton deleteLessonButton;
     private JButton reloadButton;
+    // Course Fields
+    private JTextField titleField;
+    private JTextField discriptionField;
+    private JTextField idField;
+    private JRadioButton inactiveRadioButton;
+    private JRadioButton activeRadioButton;
+    private JButton saveButton;
 
     private Course course;
 
@@ -28,10 +35,15 @@ public class CourseDetailsForm extends JFrame {
         setTitle("Course Details: " + course.getCourseTitle());
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(700, 500);
+        setSize(800, 700);
         setLocationRelativeTo(null);
         setVisible(true);
 
+        ButtonGroup statusGroup = new ButtonGroup();
+        statusGroup.add(activeRadioButton);
+        statusGroup.add(inactiveRadioButton);
+
+        loadCourseDetails();
         loadLessons();
         loadStudents();
 
@@ -62,12 +74,66 @@ public class CourseDetailsForm extends JFrame {
         reloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                loadCourseDetails();
                 loadLessons();
                 loadStudents();
             }
         });
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveCourseDetails();
+            }
+        });
     }
 
+    private void loadCourseDetails() {
+        idField.setText(course.getCourseID());
+        idField.setEditable(false);
+
+        titleField.setText(course.getCourseTitle());
+        discriptionField.setText(course.getCourseDescription());
+
+        if ("Active".equalsIgnoreCase(course.getCourseStatus())) {
+            activeRadioButton.setSelected(true);
+        } else {
+            inactiveRadioButton.setSelected(true);
+        }
+    }
+
+    private void saveCourseDetails() {
+        String newTitle = titleField.getText().trim();
+        String newDescription = discriptionField.getText().trim();
+        String newStatus = "";
+
+        if (activeRadioButton.isSelected()) {
+            newStatus = "Active";
+        } else if (inactiveRadioButton.isSelected()) {
+            newStatus = "Inactive";
+        }
+
+        if (newTitle.isEmpty() || newDescription.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Title and Description cannot be empty.");
+            return;
+        }
+
+        course.setCourseTitle(newTitle);
+        course.setCourseDescription(newDescription);
+        course.setCourseStatus(newStatus);
+
+        try {
+            CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+            db.updateObject(course, course);
+
+            JOptionPane.showMessageDialog(this, "Course details saved successfully! ");
+
+            setTitle("Course Details: " + course.getCourseTitle());
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error saving course details: " + ex.getMessage());
+        }
+    }
 
     private void editLesson() {
         int selectedRow = lessonsTable.getSelectedRow();
@@ -77,10 +143,6 @@ public class CourseDetailsForm extends JFrame {
         }
 
         String lessonId = (String) lessonsTable.getValueAt(selectedRow, 0);
-        if (lessonId.equals("ID")) {
-            JOptionPane.showMessageDialog(this, "Please select a valid lesson.");
-            return;
-        }
 
         Lesson lessonToEdit = null;
         for (Lesson lesson : course.getLessons()) {
@@ -107,10 +169,6 @@ public class CourseDetailsForm extends JFrame {
 
         String lessonIdToRemove = (String) lessonsTable.getValueAt(selectedRow, 0);
 
-        if (lessonIdToRemove.equals("ID")) {
-            JOptionPane.showMessageDialog(this, "Please select a valid lesson.");
-            return;
-        }
 
         String lessonTitle = (String) lessonsTable.getValueAt(selectedRow, 1);
 
@@ -156,10 +214,6 @@ public class CourseDetailsForm extends JFrame {
 
         String studentIdToRemove = (String) studentsTable.getValueAt(selectedRow, 0);
 
-        if (studentIdToRemove.equals("ID")) {
-            JOptionPane.showMessageDialog(this, "Please select a valid student.");
-            return;
-        }
 
         String studentName = (String) studentsTable.getValueAt(selectedRow, 1);
 

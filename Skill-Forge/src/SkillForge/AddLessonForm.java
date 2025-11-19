@@ -1,5 +1,8 @@
 package SkillForge;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,6 +40,28 @@ public class AddLessonForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Please fill in both the Title and Content.");
             return;
         }
+        CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+        JSONArray  jsonArray = db.readJsonArrayFromFile();
+
+        //for (int i = 0; i < jsonArray.length(); i++) {
+
+
+
+            JSONObject courseObject = course.toJson();
+            if (!courseObject.has("lessons")) ;
+            else {
+            JSONArray lessonsArray = courseObject.getJSONArray("lessons");
+            for(int j = 0; j < lessonsArray.length(); j++) {
+                JSONObject lessonObject = (JSONObject) lessonsArray.get(j);
+                String lessonID = lessonObject.getString("lessonId");
+                if (lessonID.equals(textField3.getText())) {
+                    JOptionPane.showMessageDialog(this, "Lesson with this ID already exists.");
+                    return;
+                }
+            }
+            }
+
+
 
         Lesson newLesson = new Lesson(
                 textField3.getText(),
@@ -47,7 +72,7 @@ public class AddLessonForm extends JFrame {
 
         course.addLesson(newLesson);
 
-        CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+
         db.updateObject(course, course);
 
         JOptionPane.showMessageDialog(this, "Lesson created and saved successfully!");

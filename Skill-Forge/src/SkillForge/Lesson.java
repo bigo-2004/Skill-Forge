@@ -5,6 +5,7 @@ public class Lesson
     private String lessonID;
     private String lessonTitle;
     private String lessonContent;
+    private Quiz quiz;
     private String courseID;
     private boolean watched = false;
 
@@ -58,5 +59,13 @@ public class Lesson
         this.lessonTitle = lessonTitle;
         this.lessonContent = lessonContent;
         this.courseID = courseID;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void addQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 }

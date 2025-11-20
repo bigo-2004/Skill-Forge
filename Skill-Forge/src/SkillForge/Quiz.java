@@ -7,8 +7,13 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Quiz {
-    private ArrayList<Question> questions;
     private String quizId;
+    private ArrayList<Question> questions;
+
+    public Quiz(String quizId, ArrayList<Question> questions) {
+        this.quizId = quizId;
+        this.questions = questions;
+    }
 
     public void addQuestion(Question question) {
         this.questions.add(question);

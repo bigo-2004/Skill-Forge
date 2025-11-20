@@ -9,9 +9,9 @@ public class Question {
     private String questionId;
     private String questionText;
     private Hashtable<String, String> answers;
-    private char correctAnswer;
+    private String correctAnswer;
 
-    public Question(String questionId, String questionText, String[] answers, char correctAnswer) throws IllegalArgumentException {
+    public Question(String questionId, String questionText, String[] answers, String correctAnswer) throws IllegalArgumentException {
         if (answers.length != 4) {
             throw new IllegalArgumentException();
         }

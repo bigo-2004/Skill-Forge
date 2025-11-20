@@ -37,9 +37,7 @@ public class Course
         return courseID;
     }
 
-    public void setCourseID(String courseID) {
-        this.courseID = courseID;
-    }
+
 
     public String getCourseTitle() {
         return courseTitle;
@@ -65,45 +63,18 @@ public class Course
         this.courseStatus = courseStatus;
     }
 
-    public String getCourseInstructor() {
-        return courseInstructor;
-    }
 
-    public void setCourseInstructor(String courseInstructor) {
-        this.courseInstructor = courseInstructor;
-    }
 
     public ArrayList<Lesson> getLessons() {
         return lessons;
     }
 
-    public void setLessons(ArrayList<Lesson> lessons) {
-        this.lessons = lessons;
-    }
 
-    public String getCourseDetails()
-    {
-        return String.format("""
-                Course ID: %s
-                Course title: %s
-                Course description: %s
-                Course status: %s
-                Course instructor: %s 
-                """, courseID, courseTitle, courseDescription, courseStatus, courseInstructor);
-        //TODO courseInstructor.getID() getter
-    }
-
-    public void updateCourse(String title, String description)
-    {
-        courseTitle = title;
-        courseDescription = description;
-        //TODO save to file
-    }
 
     public void addLesson(Lesson lesson)
     {
         lessons.add(lesson);
-        //TODO save to file
+
     }
 
     public JSONObject toJson() {  //from Object to JSONobject
@@ -112,7 +83,7 @@ public class Course
         jsonObject.put("title", this.courseTitle);
         jsonObject.put("description", this.courseDescription);
         jsonObject.put("status", this.courseStatus);
-        jsonObject.put("instructor", this.courseInstructor); //TODO instructor name or ID
+        jsonObject.put("instructor", this.courseInstructor);
         JSONArray lessonsArray = new JSONArray();
 
         for (Lesson l : lessons) {

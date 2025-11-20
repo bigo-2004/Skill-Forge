@@ -1,5 +1,8 @@
 package SkillForge;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Hashtable;
 
 public class Question {
@@ -8,8 +11,8 @@ public class Question {
     private Hashtable<String, String> answers;
     private char correctAnswer;
 
-    public Question( String questionId , String questionText , String[] answers , char correctAnswer ) throws IllegalArgumentException {
-        if( answers.length != 4) {
+    public Question(String questionId, String questionText, String[] answers, char correctAnswer) throws IllegalArgumentException {
+        if (answers.length != 4) {
             throw new IllegalArgumentException();
         }
         this.questionText = questionText;
@@ -20,6 +23,19 @@ public class Question {
         this.answers.put("B", answers[1]);
         this.answers.put("C", answers[2]);
         this.answers.put("D", answers[3]);
-        }
     }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("questionId", questionId);
+        jsonObject.put("questionText", questionText);
+        jsonObject.put("A", answers.get("A"));
+        jsonObject.put("B", answers.get("B"));
+        jsonObject.put("C", answers.get("C"));
+        jsonObject.put("D", answers.get("D"));
+        jsonObject.put("correctAnswer", correctAnswer);
+        return jsonObject;
+
+    }
+}
 

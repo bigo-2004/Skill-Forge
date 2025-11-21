@@ -2,8 +2,9 @@ package SkillForge;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import org.json.JSONException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class CourseJsonDatabase extends JsonDatabase
 {
@@ -33,7 +34,6 @@ public class CourseJsonDatabase extends JsonDatabase
         for(int i = 0; i < jsonArray.length(); i++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-            // FIX APPLIED HERE: Changed "course ID" to "courseID"
             if(jsonObject.getString("courseID").equals(courseOld.getCourseID())){
                 jsonArray.put(i, courseNew.toJson());
                 writeJsonArrayToFile(jsonArray);
@@ -50,13 +50,13 @@ public class CourseJsonDatabase extends JsonDatabase
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
             if (jsonObject.getString("courseID").equals(id)) {
+
                 JSONArray lessonsArray = jsonObject.getJSONArray("lessons");
                 ArrayList<Lesson> lessons = new ArrayList<>();
 
                 for (int j = 0; j < lessonsArray.length(); j++) {
                     JSONObject lessonJson = lessonsArray.getJSONObject(j);
 
-                    // Note: Ensure your Lesson constructor matches this order (ID, Title, Content, CourseID)
                     Lesson lesson = new Lesson(
                             lessonJson.getString("lessonId"),
                             lessonJson.getString("title"),
@@ -64,9 +64,20 @@ public class CourseJsonDatabase extends JsonDatabase
                             id
                     );
 
-                    if (lessonJson.has("watched")) {
-                        lesson.setWatched(lessonJson.getBoolean("watched"));
+                    if (lessonJson.has("watchedStatus")) {
+
+                            JSONObject statusJson = lessonJson.getJSONObject("watchedStatus");
+                            Hashtable<String, Boolean> watchedStatusMap = new Hashtable<>();
+
+                            java.util.Iterator<String> keys = statusJson.keys();
+                            while (keys.hasNext()) {
+                                String studentId = keys.next();
+                                watchedStatusMap.put(studentId, statusJson.getBoolean(studentId));
+                            }
+                            lesson.setWatchedStatus(watchedStatusMap);
+
                     }
+
 
                     lessons.add(lesson);
                 }
@@ -92,6 +103,7 @@ public class CourseJsonDatabase extends JsonDatabase
         }
         return null;
     }
+
     public void deleteObject(String id) {
         JSONArray jsonArray = readJsonArrayFromFile();
 
@@ -105,5 +117,4 @@ public class CourseJsonDatabase extends JsonDatabase
             }
         }
     }
-
 }

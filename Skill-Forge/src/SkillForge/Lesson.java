@@ -1,5 +1,7 @@
 package SkillForge;
 
+import java.util.Hashtable;
+
 public class Lesson
 {
     private String lessonID;
@@ -7,20 +9,29 @@ public class Lesson
     private String lessonContent;
     private Quiz quiz;
     private String courseID;
-    private boolean watched = false;
 
-    public void markAsWatched()
-    {
-        watched = true;
+    private Hashtable<String, Boolean> watchedStatus = new Hashtable<>();
+
+    public void markAsWatched(String studentId) {
+        watchedStatus.put(studentId, true);
+    }
+
+    public boolean isWatchedByStudent(String studentId) {
+        return watchedStatus.getOrDefault(studentId, false);
+    }
+
+    public Hashtable<String, Boolean> getWatchedStatus() {
+        return watchedStatus;
+    }
+
+    public void setWatchedStatus(Hashtable<String, Boolean> watchedStatus) {
+        this.watchedStatus = watchedStatus;
     }
 
     public String getLessonID() {
         return lessonID;
     }
 
-    public void setLessonID(String lessonID) {
-        this.lessonID = lessonID;
-    }
 
     public String getLessonTitle() {
         return lessonTitle;
@@ -46,13 +57,6 @@ public class Lesson
         this.courseID = courseID;
     }
 
-    public boolean isWatched() {
-        return watched;
-    }
-
-    public void setWatched(boolean watched) {
-        this.watched = watched;
-    }
 
     public Lesson(String lessonID, String lessonTitle, String lessonContent, String courseID) {
         this.lessonID = lessonID;

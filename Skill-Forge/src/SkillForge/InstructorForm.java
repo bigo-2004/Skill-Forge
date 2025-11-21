@@ -16,6 +16,7 @@ public class InstructorForm extends JFrame {
     private JTable table1;
     private JButton reloadButton;
     private JButton deleteCourseButton;
+    private JButton viewInsightsButton;
 
     private User instructor;
 
@@ -67,6 +68,12 @@ public class InstructorForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadInstructorCourses();
+            }
+        });
+        viewInsightsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                launchInsights();
             }
         });
     }
@@ -157,6 +164,29 @@ public class InstructorForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Course '" + courseTitle + "' deleted successfully.");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error deleting course: " + ex.getMessage());
+        }
+    }
+
+    private void launchInsights() {
+        int selectedRow = table1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a course to view insights.");
+            return;
+        }
+
+        String courseId = (String) table1.getValueAt(selectedRow, 0);
+
+        try {
+            CourseJsonDatabase courseDb = new CourseJsonDatabase("courses.json");
+            Course selectedCourse = (Course) courseDb.getObjectById(courseId);
+
+            if (selectedCourse != null) {
+                new InsightsForm(selectedCourse);
+            } else {
+                JOptionPane.showMessageDialog(this, "Selected course data not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error loading course data: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -19,6 +19,10 @@ public class Quiz {
         this.questions.add(question);
     }
 
+    public ArrayList<Question> getQuestions() {
+        return questions;
+    }
+
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("quizId", quizId);

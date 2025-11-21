@@ -25,6 +25,18 @@ public class Question {
         this.answers.put("D", answers[3]);
     }
 
+    public String getQuestionText() {
+        return questionText;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public Hashtable<String, String> getAnswers() {
+        return answers;
+    }
+
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("questionId", questionId);

@@ -33,6 +33,8 @@ public class Question {
         return correctAnswer;
     }
 
+    public String getQuestionId() {return questionId; }
+
     public Hashtable<String, String> getAnswers() {
         return answers;
     }

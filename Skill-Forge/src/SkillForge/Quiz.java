@@ -15,6 +15,10 @@ public class Quiz {
         this.questions = questions;
     }
 
+    public ArrayList<Question> returnQuestions() {
+        return questions;
+    }
+
     public void addQuestion(Question question) {
         this.questions.add(question);
     }
@@ -27,18 +31,22 @@ public class Quiz {
         JSONObject obj = new JSONObject();
         obj.put("quizId", quizId);
         JSONArray jsonQuestions = new JSONArray();
-        for(int i = 0 ; i < this.questions.size();i++){
+        for (int i = 0; i < this.questions.size(); i++) {
             jsonQuestions.put(this.questions.get(i).toJSON());
         }
         obj.put("questions", jsonQuestions);
         return obj;
     }
 
+    public int getQuestionsNumber() {
+        return this.questions.size();
+    }
+
     public static Quiz fromJson(JSONObject obj) {
         String quizId = obj.getString("quizId");
         ArrayList<Question> questions = new ArrayList<>();
         JSONArray jsonQuestions = obj.getJSONArray("questions");
-        for(int i = 0 ; i < jsonQuestions.length();i++){
+        for (int i = 0; i < jsonQuestions.length(); i++) {
             JSONObject jsonQuestion = jsonQuestions.getJSONObject(i);
             questions.add(Question.fromJSON(jsonQuestion));
         }

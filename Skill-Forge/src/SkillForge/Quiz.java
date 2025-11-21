@@ -33,4 +33,15 @@ public class Quiz {
         obj.put("questions", jsonQuestions);
         return obj;
     }
+
+    public static Quiz fromJson(JSONObject obj) {
+        String quizId = obj.getString("quizId");
+        ArrayList<Question> questions = new ArrayList<>();
+        JSONArray jsonQuestions = obj.getJSONArray("questions");
+        for(int i = 0 ; i < jsonQuestions.length();i++){
+            JSONObject jsonQuestion = jsonQuestions.getJSONObject(i);
+            questions.add(Question.fromJSON(jsonQuestion));
+        }
+        return new Quiz(quizId, questions);
+    }
 }

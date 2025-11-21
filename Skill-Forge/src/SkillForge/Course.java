@@ -77,6 +77,14 @@ public class Course
 
     }
 
+    public String getCourseInstructor() {
+        return courseInstructor;
+    }
+
+    public void setCourseInstructor(String courseInstructor) {
+        this.courseInstructor = courseInstructor;
+    }
+
     public JSONObject toJson() {  //from Object to JSONobject
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("courseID", this.courseID);

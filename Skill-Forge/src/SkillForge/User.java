@@ -41,6 +41,29 @@ public  class User {
         return userId;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public   JSONObject toJson() {  //from Object to JSONobject
         JSONObject jsonObject = new JSONObject();

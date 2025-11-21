@@ -122,7 +122,7 @@ public class InstructorForm extends JFrame {
         for (int i = 0; i < arr.length(); i++) {
             JSONObject obj = arr.getJSONObject(i);
 
-            if (!obj.getString("instructor").equals(instructor.getUserId())) {
+            if (!obj.getString("instructor").equals(instructor.getEmail())) {
                 continue;
             }
 

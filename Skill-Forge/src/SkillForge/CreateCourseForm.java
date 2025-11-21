@@ -64,7 +64,7 @@ public class CreateCourseForm extends JFrame{
                 title,
                 description,
                 "Active",
-                instructor.getUserId(),
+                instructor.getEmail(),
                 lessons,
                 students
         );

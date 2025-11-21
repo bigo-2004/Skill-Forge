@@ -127,7 +127,7 @@ public class StudentForm extends JFrame{
             return;
         }
 
-        new ViewLessonsForm(course);
+        new ViewLessonsForm(course,student);
     }
 
     private void loadCoursesIntoTable() {

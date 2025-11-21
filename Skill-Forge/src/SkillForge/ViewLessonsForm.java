@@ -4,18 +4,19 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ViewLessonsForm extends JFrame {
 
     private JPanel mainPanel;
     private JTable table1;
     private JButton markCompletedButton;
+    private JButton loadQuizButton;
     private Course course;
+    private User student;
 
-    public ViewLessonsForm(Course course){
+    public ViewLessonsForm(Course course,User student){
         this.course = course;
+        this.student=student;
 
         setTitle("Lessons for: " + course.getCourseTitle());
         setContentPane(mainPanel);
@@ -29,6 +30,12 @@ public class ViewLessonsForm extends JFrame {
         if (markCompletedButton != null) {
             markCompletedButton.addActionListener(e -> markLessonAsCompleted());
         }
+        loadQuizButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                launchQuiz();
+            }
+        });
     }
 
     private void markLessonAsCompleted() {
@@ -99,5 +106,34 @@ public class ViewLessonsForm extends JFrame {
             };
             model.addRow(row);
         }
+    }
+
+    private void launchQuiz() {
+        int selectedRow = table1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a lesson to take the quiz.");
+            return;
+        }
+
+        String lessonId = (String) table1.getValueAt(selectedRow, 0);
+
+        Lesson selectedLesson = null;
+        for (Lesson l : course.getLessons()) {
+            if (l.getLessonID().equals(lessonId)) {
+                selectedLesson = l;
+                break;
+            }
+        }
+
+        if (selectedLesson == null) {
+            JOptionPane.showMessageDialog(this, "Lesson details not found.");
+            return;
+        }
+
+        if (selectedLesson.getQuiz() == null) {
+            JOptionPane.showMessageDialog(this, "This lesson does not have an attached quiz.");
+            return;
+        }
+        new QuizForm(course, selectedLesson, student);
     }
 }

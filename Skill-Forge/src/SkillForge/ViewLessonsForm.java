@@ -47,7 +47,6 @@ public class ViewLessonsForm extends JFrame {
 
         String lessonId = (String) table1.getValueAt(selectedRow, 0);
 
-
         Lesson lessonToMark = null;
         for (Lesson lesson : course.getLessons()) {
             if (lesson.getLessonID().equals(lessonId)) {
@@ -61,19 +60,20 @@ public class ViewLessonsForm extends JFrame {
             return;
         }
 
-        if (lessonToMark.isWatched()) {
+        if (lessonToMark.isWatchedByStudent(student.getUserId())) {
             JOptionPane.showMessageDialog(this, lessonToMark.getLessonTitle() + " is already marked as completed.");
             return;
         }
 
-        lessonToMark.setWatched(true);
+        lessonToMark.markAsWatched(student.getUserId());
 
         try {
             CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+
             db.updateObject(course, course);
 
             loadLessons();
-            JOptionPane.showMessageDialog(this, lessonToMark.getLessonTitle() + " marked as completed! ");
+            JOptionPane.showMessageDialog(this, lessonToMark.getLessonTitle() + " marked as completed!");
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error saving completion status: " + ex.getMessage());
@@ -96,7 +96,8 @@ public class ViewLessonsForm extends JFrame {
 
 
         for (Lesson lesson : course.getLessons()) {
-            String status = lesson.isWatched() ? "Completed" : "Pending";
+            boolean watched = lesson.isWatchedByStudent(student.getUserId());
+            String status = watched ? "Completed" : "Pending";
 
             String[] row = {
                     lesson.getLessonID(),
@@ -107,6 +108,7 @@ public class ViewLessonsForm extends JFrame {
             model.addRow(row);
         }
     }
+
 
     private void launchQuiz() {
         int selectedRow = table1.getSelectedRow();

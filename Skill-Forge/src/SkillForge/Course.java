@@ -99,7 +99,11 @@ public class Course
             lessonJson.put("lessonId", l.getLessonID());
             lessonJson.put("title", l.getLessonTitle());
             lessonJson.put("content", l.getLessonContent());
-            lessonJson.put("watched", l.isWatched());
+            lessonJson.put("watchedStatus", l.getWatchedStatus());
+
+            if (l.getQuiz() != null) {
+                lessonJson.put("quiz", l.getQuiz().toJson());
+            }
 
             lessonsArray.put(lessonJson);
         }

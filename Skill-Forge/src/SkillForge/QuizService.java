@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class QuizService {
-    public int gradeSize(Quiz quiz, Hashtable<String, String> studentAnswers) {
+    //Hashtable (key will be Question id value will be student choice!)
+    public int quizMarks(Quiz quiz, Hashtable<String, String> studentAnswers) {
      int correctAnswers = 0;
      int questionNumbers = quiz.getQuestionsNumber();
      ArrayList<Question> questions = quiz.getQuestions();

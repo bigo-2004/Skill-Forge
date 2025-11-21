@@ -2,6 +2,7 @@ package SkillForge;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -41,23 +42,24 @@ public class Student extends User {
         return jsonObject;
     }
 
-//    public static Student fromJsonToStudent(JSONObject jsonObject) {
-//        Student s = new Student(jsonObject.getString("id"),
-//                jsonObject.getString("username"),
-//                jsonObject.getString("email")
-//                , jsonObject.getString("passwordHash"),
-//                jsonObject.getString("role"));
-//
-//        if (jsonObject.has("quizResults")) {
-//            JSONObject quizResultsObject = jsonObject.getJSONObject("quizResults");
-//            Hashtable<String, Integer> quizResults = new Hashtable<>();
-//
-//            for (String key : quizResultsObject.keySet()) {
-//                quizResults.put(key, quizResultsObject.getInt(key));
-//            }
-//
-//            s.setQuizResults(quizResults);
-//        }
-//        return s;
-//    }
+    public static Student fromJsonToStudent(JSONObject jsonObject) {
+        Student s = new Student(jsonObject.getString("id"),
+                jsonObject.getString("username"),
+                jsonObject.getString("email")
+                ,jsonObject.getString("passwordHash"),
+                jsonObject.getString("role"));
+
+        if (jsonObject.has("quizResults")) {
+            JSONObject quizResultsObject = jsonObject.getJSONObject("quizResults");
+            Hashtable<String, Integer> quizResults = new Hashtable<>();
+            ArrayList<String> keys = new ArrayList<>(quizResultsObject.keySet());
+            for (int i = 0; i < keys.size(); i++) {
+                String key = keys.get(i);
+                int value = quizResultsObject.getInt(key);
+                quizResults.put(key, value);
+            }
+            s.setQuizResults(quizResults);
+        }
+        return s;
+    }
 }

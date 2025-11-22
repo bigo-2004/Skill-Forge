@@ -55,7 +55,11 @@ public class Question {
     public static Question fromJSON(JSONObject obj) throws JSONException {
         String questionId = obj.getString("questionId");
         String questionText = obj.getString("questionText");
-        String[] answers = obj.getString("answers").split(",");
+        String[] answers = {"","","",""};
+        if(obj.has("answers")) {
+             answers = obj.getString("answers").split(",");
+        }
+
         String correctAnswer = obj.getString("correctAnswer");
         return new Question(questionId, questionText, answers, correctAnswer);
 

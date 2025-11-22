@@ -63,6 +63,7 @@ public class QuizForm extends JFrame {
         controlPanel.add(nextButton);
         controlPanel.add(submitButton);
         controlPanel.add(previousButton);
+        mainPanel.setLayout(new BorderLayout());
         mainPanel.add(controlPanel, BorderLayout.SOUTH);
         setContentPane(mainPanel);
 

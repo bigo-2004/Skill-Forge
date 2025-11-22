@@ -159,7 +159,7 @@ public class StudentForm extends JFrame{
             String instructor = obj.getString("instructor");
             String status = obj.getString("status");
 
-            if ("Inactive".equalsIgnoreCase(status)) {
+            if (!"APPROVED".equalsIgnoreCase(status)) {
                 continue;
             }
 

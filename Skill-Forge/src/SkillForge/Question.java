@@ -55,11 +55,11 @@ public class Question {
     public static Question fromJSON(JSONObject obj) throws JSONException {
         String questionId = obj.getString("questionId");
         String questionText = obj.getString("questionText");
-        String[] answers = {"","","",""};
-        if(obj.has("answers")) {
-             answers = obj.getString("answers").split(",");
-        }
-
+        String q1 = obj.getString("A");
+        String q2 = obj.getString("B");
+        String q3 = obj.getString("C");
+        String q4 = obj.getString("D");
+        String[] answers = {q1,q2,q3,q4};
         String correctAnswer = obj.getString("correctAnswer");
         return new Question(questionId, questionText, answers, correctAnswer);
 

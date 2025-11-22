@@ -136,6 +136,9 @@ public class ViewLessonsForm extends JFrame {
             JOptionPane.showMessageDialog(this, "This lesson does not have an attached quiz.");
             return;
         }
+//        UserJsonDatabase db = new UserJsonDatabase("users.json");
+//        Student freshStudent = (Student) db.getObjectById(student.getUserId());
+
         new QuizForm(course, selectedLesson, student);
     }
 }

@@ -75,7 +75,7 @@ public  class User {
         return jsonObject;
     }
 
-    public  User fromJson(JSONObject obj) {  //from JSONobject to object
+    public static User fromJson(JSONObject obj) {  //from JSONobject to object
         return new User(obj.getString("id"), obj.getString("username"), obj.getString("email"), obj.getString("passwordHash"),obj.getString("role"));
     }
 

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Hashtable;
 import java.util.List;
 
 public class QuizForm extends JFrame{
@@ -48,26 +49,11 @@ public class QuizForm extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        mainPanel.setLayout(new BorderLayout(10, 10));
-
-        JPanel questionPanel = new JPanel(new BorderLayout());
-        questionPanel.add(questionLabel, BorderLayout.NORTH);
-        mainPanel.add(questionPanel, BorderLayout.NORTH);
-
-        JPanel optionsPanel = new JPanel();
-        optionsPanel.setLayout(new GridLayout(4, 1, 5, 5));
-
         optionsGroup = new ButtonGroup();
         optionsGroup.add(optionA);
-        optionsPanel.add(optionA);
         optionsGroup.add(optionB);
-        optionsPanel.add(optionB);
         optionsGroup.add(optionC);
-        optionsPanel.add(optionC);
         optionsGroup.add(optionD);
-        optionsPanel.add(optionD);
-
-        mainPanel.add(optionsPanel, BorderLayout.CENTER);
 
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         progressLabel.setText("Question 1 of " + questions.size());
@@ -92,9 +78,7 @@ public class QuizForm extends JFrame{
                     saveAnswer();
                     nextButton.setEnabled(false);
                     submitButton.setEnabled(true);
-                    JOptionPane.showMessageDialog(QuizForm.this,
-                            "You have reached the end of the quiz. Click Submit to see your results.",
-                            "Ready to Submit", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(QuizForm.this, "You have reached the end of the quiz\nClick Submit to see your results.");
                 }
             }
         });
@@ -171,25 +155,7 @@ public class QuizForm extends JFrame{
     }
 
     private void submitQuiz() {
-        int maxScore = questions.size();
-        correctAnswers = 0;
 
-        for (int i = 0; i < questions.size(); i++) {
-            Question q = questions.get(i);
-            String correctAns = q.getCorrectAnswer();
-            char studentAns = studentAnswers[i];
-            if (studentAns != ' ' && String.valueOf(studentAns).equals(correctAns)) {
-                correctAnswers++;
-            }
-        }
-        double pass = 0.5;
-        boolean passed = (double) correctAnswers / maxScore >= 0.5;
-
-
-
-
-        showResults(maxScore, passed);
-        this.dispose();
     }
 
     private void showResults(int maxScore, boolean passed) {

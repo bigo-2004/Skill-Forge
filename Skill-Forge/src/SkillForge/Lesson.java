@@ -49,13 +49,6 @@ public class Lesson
         this.lessonContent = lessonContent;
     }
 
-    public String getCourseID() {
-        return courseID;
-    }
-
-    public void setCourseID(String courseID) {
-        this.courseID = courseID;
-    }
 
 
     public Lesson(String lessonID, String lessonTitle, String lessonContent, String courseID) {

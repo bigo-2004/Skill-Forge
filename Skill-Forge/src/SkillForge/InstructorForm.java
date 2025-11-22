@@ -183,10 +183,10 @@ public class InstructorForm extends JFrame {
             if (selectedCourse != null) {
                 new InsightsForm(selectedCourse);
             } else {
-                JOptionPane.showMessageDialog(this, "Selected course data not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Selected course data not found.");
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error loading course data: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error loading course data: " + ex.getMessage());
         }
     }
 }

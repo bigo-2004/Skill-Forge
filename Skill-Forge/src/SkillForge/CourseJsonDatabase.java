@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 public class CourseJsonDatabase extends JsonDatabase
 {
@@ -69,7 +70,7 @@ public class CourseJsonDatabase extends JsonDatabase
                             JSONObject statusJson = lessonJson.getJSONObject("watchedStatus");
                             Hashtable<String, Boolean> watchedStatusMap = new Hashtable<>();
 
-                            java.util.Iterator<String> keys = statusJson.keys();
+                            Iterator<String> keys = statusJson.keys();
                             while (keys.hasNext()) {
                                 String studentId = keys.next();
                                 watchedStatusMap.put(studentId, statusJson.getBoolean(studentId));
@@ -77,7 +78,6 @@ public class CourseJsonDatabase extends JsonDatabase
                             lesson.setWatchedStatus(watchedStatusMap);
 
                     }
-
 
                     lessons.add(lesson);
                 }

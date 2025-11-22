@@ -117,4 +117,8 @@ public class Course
 
         return jsonObject;
     }
+    public Course fromJson(JSONObject obj) {
+
+        return CourseJsonDatabase.courseFromJSON(obj.getString("CourseID"), obj);
+    }
 }

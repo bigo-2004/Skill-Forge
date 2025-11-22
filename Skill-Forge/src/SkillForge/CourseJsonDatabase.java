@@ -52,23 +52,30 @@ public class CourseJsonDatabase extends JsonDatabase
 
             if (jsonObject.getString("courseID").equals(id)) {
 
-                JSONArray lessonsArray = jsonObject.getJSONArray("lessons");
-                ArrayList<Lesson> lessons = new ArrayList<>();
+                return courseFromJSON(id, jsonObject);
+            }
+        }
+        return null;
+    }
 
-                for (int j = 0; j < lessonsArray.length(); j++) {
-                    JSONObject lessonJson = lessonsArray.getJSONObject(j);
+    public static Course courseFromJSON(String id, JSONObject jsonObject) {
+        JSONArray lessonsArray = jsonObject.getJSONArray("lessons");
+        ArrayList<Lesson> lessons = new ArrayList<>();
 
-                    Lesson lesson = new Lesson(
-                            lessonJson.getString("lessonId"),
-                            lessonJson.getString("title"),
-                            lessonJson.getString("content"),
-                            id
-                    );
+        for (int j = 0; j < lessonsArray.length(); j++) {
+            JSONObject lessonJson = lessonsArray.getJSONObject(j);
 
-                    if (lessonJson.has("watchedStatus")) {
+            Lesson lesson = new Lesson(
+                    lessonJson.getString("lessonId"),
+                    lessonJson.getString("title"),
+                    lessonJson.getString("content"),
+                    id
+            );
 
-                            JSONObject statusJson = lessonJson.getJSONObject("watchedStatus");
-                            Hashtable<String, Boolean> watchedStatusMap = new Hashtable<>();
+            if (lessonJson.has("watchedStatus")) {
+
+                    JSONObject statusJson = lessonJson.getJSONObject("watchedStatus");
+                    Hashtable<String, Boolean> watchedStatusMap = new Hashtable<>();
 
                             Iterator<String> keys = statusJson.keys();
                             while (keys.hasNext()) {
@@ -77,31 +84,29 @@ public class CourseJsonDatabase extends JsonDatabase
                             }
                             lesson.setWatchedStatus(watchedStatusMap);
 
-                    }
+            }
+            lesson.addQuiz(Quiz.fromJson(lessonJson.getJSONObject("quiz")));
 
                     lessons.add(lesson);
                 }
 
-                JSONArray studentsArray = jsonObject.getJSONArray("students");
-                ArrayList<Student> students = new ArrayList<>();
+        JSONArray studentsArray = jsonObject.getJSONArray("students");
+        ArrayList<Student> students = new ArrayList<>();
 
-                for (int k = 0; k < studentsArray.length(); k++) {
-                    String studentId = studentsArray.getString(k);
-                    students.add(new Student(studentId, "", ""));
-                }
-
-                return new Course(
-                        jsonObject.getString("courseID"),
-                        jsonObject.getString("title"),
-                        jsonObject.getString("description"),
-                        jsonObject.getString("status"),
-                        jsonObject.getString("instructor"),
-                        lessons,
-                        students
-                );
-            }
+        for (int k = 0; k < studentsArray.length(); k++) {
+            String studentId = studentsArray.getString(k);
+            students.add(new Student(studentId, "", ""));
         }
-        return null;
+
+        return new Course(
+                jsonObject.getString("courseID"),
+                jsonObject.getString("title"),
+                jsonObject.getString("description"),
+                jsonObject.getString("status"),
+                jsonObject.getString("instructor"),
+                lessons,
+                students
+        );
     }
 
     public void deleteObject(String id) {

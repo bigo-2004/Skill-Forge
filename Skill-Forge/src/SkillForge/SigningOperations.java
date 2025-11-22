@@ -46,7 +46,13 @@ public class SigningOperations {
             jsonArray.put(o);
             db.writeJsonArrayToFile(jsonArray);
             return true;
-
+        }
+        else if(role.equals("Admin")) {
+            Admin a = new Admin(id, username, email, hashedPassword, role);
+            JSONObject o = a.toJson();
+            jsonArray.put(o);
+            db.writeJsonArrayToFile(jsonArray);
+            return true;
         }
 
         return false;

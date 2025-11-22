@@ -12,12 +12,14 @@ public class LoginForm extends JFrame {
     private JPanel mainPanel;
     private JRadioButton studentRadioButton;
     private JRadioButton instructorRadioButton;
+    private JRadioButton adminRadioButton;
     private ButtonGroup roleGroup = new ButtonGroup();
 
     public LoginForm() {
 
         roleGroup.add(studentRadioButton);
         roleGroup.add(instructorRadioButton);
+        roleGroup.add(adminRadioButton);
 
         setTitle("Login");
         setContentPane(mainPanel);
@@ -42,8 +44,8 @@ public class LoginForm extends JFrame {
                 String email = textField1.getText().trim();
                 String password = new String(passwordField1.getPassword());
 
-                if(!studentRadioButton.isSelected() && !instructorRadioButton.isSelected()) {
-                    JOptionPane.showMessageDialog(LoginForm.this, "Please select a student or instructor");
+                if(!studentRadioButton.isSelected() && !instructorRadioButton.isSelected() && !adminRadioButton.isSelected()) {
+                    JOptionPane.showMessageDialog(LoginForm.this, "Please select a role");
                     return;
                 }
 
@@ -68,6 +70,9 @@ public class LoginForm extends JFrame {
                 else if(instructorRadioButton.isSelected()) {
                     expectedRole = "Instructor";
                 }
+                else if(adminRadioButton.isSelected()) {
+                    expectedRole = "Admin";
+                }
                 User u = SigningOperations.login(email, password,expectedRole);
 
                 if(u == null) {
@@ -83,6 +88,10 @@ public class LoginForm extends JFrame {
                 }
                 else if (u != null && expectedRole.equals("Instructor") ) {
                     new InstructorForm(u);
+                    dispose();
+                }
+                else if (u != null && expectedRole.equals("Admin") ) {
+                    new AdminForm(u);
                     dispose();
                 }
 

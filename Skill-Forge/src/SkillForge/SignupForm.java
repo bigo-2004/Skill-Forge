@@ -15,6 +15,7 @@ public class SignupForm extends JFrame {
     private JRadioButton studentRadioButton;
     private JRadioButton instructorRadioButton;
     private JButton returnToLoginPageButton;
+    private JRadioButton adminRadioButton;
     private JPanel mainPanel;
     private JTextField textField4;
     private ButtonGroup roleGroup = new ButtonGroup();
@@ -23,6 +24,7 @@ public class SignupForm extends JFrame {
 
         roleGroup.add(studentRadioButton);
         roleGroup.add(instructorRadioButton);
+        roleGroup.add(adminRadioButton);
 
         setTitle("Signup");
         setContentPane(mainPanel);
@@ -75,8 +77,10 @@ public class SignupForm extends JFrame {
                 } else if (instructorRadioButton.isSelected()) {
                     role = "Instructor";
                 }
-
-                if (username.isEmpty() || email.isEmpty() || pd.isEmpty() || (!studentRadioButton.isSelected() && !instructorRadioButton.isSelected())) {
+                else if (adminRadioButton.isSelected()) {
+                    role = "Admin";
+                }
+                if (username.isEmpty() || email.isEmpty() || pd.isEmpty() || (!studentRadioButton.isSelected() && !instructorRadioButton.isSelected() && !adminRadioButton.isSelected())) {
                     JOptionPane.showMessageDialog(null, "Please fill all fields and select a role.");
                     return;
                 }

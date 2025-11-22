@@ -25,7 +25,6 @@ public class AdminForm extends JFrame {
         viewPendingCoursesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 new ViewPendingCoursesForm();
             }
         });

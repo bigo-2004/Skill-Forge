@@ -27,7 +27,7 @@ public class QuizForm extends JFrame {
 
     private List<Question> questions;
     private int currentQuestionIndex = 0;
-    private char[] studentAnswers; // Stores student's choice ('A', 'B', 'C', 'D', or ' ')
+    private char[] studentAnswers;
 
     public QuizForm(Course course, Lesson lesson, User student) {
         this.course = course;
@@ -54,18 +54,12 @@ public class QuizForm extends JFrame {
         optionsGroup.add(optionC);
         optionsGroup.add(optionD);
 
-        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         progressLabel.setText("Question 1 of " + questions.size());
         submitButton.setEnabled(false);
         previousButton.setEnabled(false);
 
-        controlPanel.add(progressLabel);
-        controlPanel.add(nextButton);
-        controlPanel.add(submitButton);
-        controlPanel.add(previousButton);
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(controlPanel, BorderLayout.SOUTH);
         setContentPane(mainPanel);
+
 
         nextButton.addActionListener(new ActionListener() {
             @Override
@@ -156,7 +150,7 @@ public class QuizForm extends JFrame {
     private void submitQuiz() {
         saveAnswer();
         Hashtable<String, String> studentAnswersMap = new Hashtable<>();
-        int x = 0;   //Local correct ans.
+        int x = 0;
 
         for (int i = 0; i < questions.size(); i++) {
             Question q = questions.get(i);

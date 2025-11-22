@@ -25,7 +25,6 @@ public class AdminForm extends JFrame {
         viewPendingCoursesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 new ViewPendingCoursesForm();
             }
         });
@@ -33,7 +32,7 @@ public class AdminForm extends JFrame {
         viewAllCoursesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(AdminForm.this, "Coming soon...");
+                new ViewCoursesForm();
             }
         });
 

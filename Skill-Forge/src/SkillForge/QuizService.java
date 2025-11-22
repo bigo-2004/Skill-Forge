@@ -5,7 +5,7 @@ import java.util.Hashtable;
 
 public class QuizService {
     //Hashtable (key will be Question id value will be student choice!)
-    public int quizMarks(Quiz quiz, Hashtable<String, String> studentAnswers) {
+    public static int quizMarks(Quiz quiz, Hashtable<String, String> studentAnswers) {
      int correctAnswers = 0;
      int questionNumbers = quiz.getQuestionsNumber();
      ArrayList<Question> questions = quiz.getQuestions();
@@ -19,7 +19,7 @@ public class QuizService {
 
     }
 
-    public boolean isPassed(int score){
+    public static boolean isPassed(int score){
         return  score >= 50;
     }
 }

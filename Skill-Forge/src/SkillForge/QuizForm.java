@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.util.List;
 
-public class QuizForm extends JFrame{
+public class QuizForm extends JFrame {
     private JPanel mainPanel;
     private JLabel questionLabel;
     private JRadioButton optionA;
@@ -27,13 +27,12 @@ public class QuizForm extends JFrame{
 
     private List<Question> questions;
     private int currentQuestionIndex = 0;
-    private int correctAnswers = 0;
-    private char[] studentAnswers;
+    private char[] studentAnswers; // Stores student's choice ('A', 'B', 'C', 'D', or ' ')
 
-    public QuizForm(Course course, Lesson lesson, User student){
-        this.course =course;
-        this.lesson=lesson;
-        this.student=student;
+    public QuizForm(Course course, Lesson lesson, User student) {
+        this.course = course;
+        this.lesson = lesson;
+        this.student = student;
         this.quiz = lesson.getQuiz();
 
         if (quiz == null || quiz.getQuestions() == null || quiz.getQuestions().isEmpty()) {
@@ -74,11 +73,11 @@ public class QuizForm extends JFrame{
                 if (currentQuestionIndex < questions.size() - 1) {
                     currentQuestionIndex++;
                     loadQuestion(currentQuestionIndex);
+                    previousButton.setEnabled(true);
                 } else {
-                    saveAnswer();
                     nextButton.setEnabled(false);
                     submitButton.setEnabled(true);
-                    JOptionPane.showMessageDialog(QuizForm.this, "You have reached the end of the quiz\nClick Submit to see your results.");
+                    JOptionPane.showMessageDialog(QuizForm.this, "You have reached the end of the quiz.\nClick Submit to see your results.");
                 }
             }
         });
@@ -108,7 +107,6 @@ public class QuizForm extends JFrame{
 
         loadQuestion(currentQuestionIndex);
         setVisible(true);
-
     }
 
     private void saveAnswer() {
@@ -155,19 +153,57 @@ public class QuizForm extends JFrame{
     }
 
     private void submitQuiz() {
+        saveAnswer();
+        Hashtable<String, String> studentAnswersMap = new Hashtable<>();
+        int x = 0;   //Local correct ans.
 
+        for (int i = 0; i < questions.size(); i++) {
+            Question q = questions.get(i);
+            String studentChoice = String.valueOf(studentAnswers[i]);
+
+            if (!studentChoice.trim().isEmpty()) {
+                studentAnswersMap.put(q.getQuestionId(), studentChoice);
+                if (q.getCorrectAnswer().equals(studentChoice)) {
+                    x++;
+                }
+            }
+        }
+
+        int finalScorePercentage = 0;
+
+        if (!questions.isEmpty()) {
+            finalScorePercentage = QuizService.quizMarks(quiz, studentAnswersMap);
+        }
+
+        boolean passed = QuizService.isPassed(finalScorePercentage);
+        try {
+            UserJsonDatabase userDb = new UserJsonDatabase("users.json");
+            Student studentOld = (Student) student;
+            Student studentNew = Student.fromJsonToStudent(studentOld.toJson());
+
+            studentNew.getQuizResults().put(lesson.getLessonID(), finalScorePercentage);
+            userDb.updateObject(studentOld, studentNew);
+            studentOld.setQuizResults(studentNew.getQuizResults());
+            showResults(x, questions.size(), finalScorePercentage, passed);
+            dispose();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error saving quiz results: " + ex.getMessage() + "\nData may not be saved.",
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    private void showResults(int maxScore, boolean passed) {
+    private void showResults(int correctCount, int totalQuestions, int scorePercentage, boolean passed) {
         String message = String.format(
-                "Quiz Complete!\n\nYour Score: %d / %d (%.0f%%)\nStatus: %s",
-                correctAnswers, maxScore,
-                ((double)correctAnswers / maxScore) * 100,
-                passed ? "PASSED" : "FAILED"
+                "Quiz Complete!\n\n" +
+                        "Correct Answers: %d / %d\n" +
+                        "Final Percentage: %d%%\n" +
+                        "Status: %s",
+                correctCount, totalQuestions, scorePercentage,
+                passed ? "PASSED " : "FAILED "
         );
 
         JOptionPane.showMessageDialog(null, message, "Quiz Results", JOptionPane.INFORMATION_MESSAGE);
     }
 }
-
-

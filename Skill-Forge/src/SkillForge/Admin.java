@@ -13,4 +13,9 @@ public class Admin extends User{
     {
         course.courseStatus = "rejected";
     }
+    public void removeUser(User user)
+    {
+        UserJsonDatabase database = new UserJsonDatabase("users.json");
+        database.deleteUser(user);
+    }
 }

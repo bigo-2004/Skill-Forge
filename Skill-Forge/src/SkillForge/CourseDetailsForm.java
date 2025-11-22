@@ -26,6 +26,7 @@ public class CourseDetailsForm extends JFrame {
     private JRadioButton inactiveRadioButton;
     private JRadioButton activeRadioButton;
     private JButton saveButton;
+    private JButton addQuizButton;
 
     private Course course;
 
@@ -86,6 +87,34 @@ public class CourseDetailsForm extends JFrame {
                 saveCourseDetails();
             }
         });
+        addQuizButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            addQuizToLesson();
+            }
+        });
+    }
+
+    private void addQuizToLesson() {
+        int selectedRow = lessonsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a lesson to add a quiz to.");
+            return;
+        }
+        String lessonId = (String) lessonsTable.getValueAt(selectedRow, 0);
+
+        Lesson lessonToAddQuizTo = null;
+        for (Lesson lesson : course.getLessons()) {
+            if (lesson.getLessonID().equals(lessonId)) {
+                lessonToAddQuizTo = lesson;
+                break;
+            }
+        }
+        if (lessonToAddQuizTo == null) {
+            JOptionPane.showMessageDialog(this, "Lesson not found.");
+            return;
+        }
+        new CreateQuiz(course,lessonToAddQuizTo);
     }
 
     private void loadCourseDetails() {

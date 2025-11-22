@@ -85,7 +85,10 @@ public class CourseJsonDatabase extends JsonDatabase
                             lesson.setWatchedStatus(watchedStatusMap);
 
             }
-            lesson.addQuiz(Quiz.fromJson(lessonJson.getJSONObject("quiz")));
+            if(lessonJson.has("quiz")){
+                lesson.addQuiz(Quiz.fromJson(lessonJson.getJSONObject("quiz")));
+            }
+
 
                     lessons.add(lesson);
                 }

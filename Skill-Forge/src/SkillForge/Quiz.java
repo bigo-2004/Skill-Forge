@@ -19,6 +19,10 @@ public class Quiz {
         return questions;
     }
 
+    public String getQuizId() {
+        return quizId;
+    }
+
     public void addQuestion(Question question) {
         this.questions.add(question);
     }

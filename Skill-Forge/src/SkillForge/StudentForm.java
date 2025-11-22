@@ -79,7 +79,7 @@ public class StudentForm extends JFrame{
                         return;
                     }
 
-                    if (!"Active".equalsIgnoreCase(course.getCourseStatus())) {
+                    if (!"APPROVED".equalsIgnoreCase(course.getCourseStatus())) {
                         JOptionPane.showMessageDialog(null, "Cannot enroll: This course is currently inactive.");
                         return;
                     }

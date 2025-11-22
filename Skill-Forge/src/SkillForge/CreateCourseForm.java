@@ -63,7 +63,7 @@ public class CreateCourseForm extends JFrame{
                 courseId,
                 title,
                 description,
-                "Active",
+                "PENDING",
                 instructor.getEmail(),
                 lessons,
                 students
@@ -73,7 +73,7 @@ public class CreateCourseForm extends JFrame{
 
 
         db.saveObject(newCourse);
-        JOptionPane.showMessageDialog(null, "Course created successfully!");
+        JOptionPane.showMessageDialog(null, "Course created, waitting for admin aproval!");
         dispose();
     }
 }

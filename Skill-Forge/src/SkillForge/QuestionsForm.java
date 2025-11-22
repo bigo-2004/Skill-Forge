@@ -1,5 +1,7 @@
 package SkillForge;
 
+import org.json.JSONArray;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,12 +32,14 @@ public class QuestionsForm extends JFrame {
     private int currentQuestionIndex = 1;
     private List<Question> tempQuestions = new ArrayList<>();
     private ButtonGroup answerGroup;
+    private Course course;
 
 
-    public QuestionsForm(Lesson lesson, String quizId, int totalQuestions) {
+    public QuestionsForm(Lesson lesson, String quizId, int totalQuestions ,Course c) {
         this.lesson = lesson;
         this.quizId = quizId;
         this.totalQuestions = totalQuestions;
+        this.course = c;
 
         setContentPane(mainPanel);
         setTitle("Create Quiz Questions: " + quizId);
@@ -203,8 +207,12 @@ public class QuestionsForm extends JFrame {
 
         try {
             Quiz newQuiz = new Quiz(this.quizId, (ArrayList<Question>) tempQuestions);
-
             lesson.addQuiz(newQuiz);
+
+            CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+            db.updateObject(course,course);
+
+
 
             JOptionPane.showMessageDialog(this,
                     "Quiz '" + newQuiz.getQuizId() + "' successfully created and attached to lesson!");

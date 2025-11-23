@@ -15,6 +15,10 @@ public class Quiz {
         this.questions = questions;
     }
 
+    public void setQuestions(ArrayList<Question> questions) {
+        this.questions = questions;
+    }
+
     public ArrayList<Question> returnQuestions() {
         return questions;
     }

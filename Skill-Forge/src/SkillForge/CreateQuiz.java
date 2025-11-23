@@ -56,7 +56,7 @@ public class CreateQuiz extends JFrame {
                 return;
             }
 
-            new QuestionsForm(lesson, quizId, totalQuestions,course);
+            new QuestionsForm(lesson, quizId, totalQuestions,course,lesson.getQuiz());
             dispose();
 
         } catch (NumberFormatException ex) {

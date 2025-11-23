@@ -16,6 +16,8 @@
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-9731951"/>
+          <font size="17"/>
           <text value="View Pending Courses"/>
         </properties>
       </component>
@@ -24,6 +26,8 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-9731951"/>
+          <font size="17"/>
           <text value="View All Courses"/>
         </properties>
       </component>
@@ -32,6 +36,8 @@
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-9731951"/>
+          <font size="17"/>
           <foreground color="-1769467"/>
           <text value="Logout"/>
         </properties>

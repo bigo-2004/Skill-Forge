@@ -130,7 +130,7 @@ public class StudentForm extends JFrame{
     }
 
     private void loadCoursesIntoTable() {
-        String[] columns = {"Course ID", "Title", "Description", "Instructor", "Status"};
+        String[] columns = {"Course ID", "Title", "Description", "Instructor"};
 
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
@@ -162,7 +162,7 @@ public class StudentForm extends JFrame{
                 continue;
             }
 
-            String[] row = {id, title, description, instructor, status};
+            String[] row = {id, title, description, instructor};
             model.addRow(row);
         }
     }

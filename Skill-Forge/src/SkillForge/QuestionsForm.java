@@ -33,16 +33,23 @@ public class QuestionsForm extends JFrame {
     private List<Question> tempQuestions = new ArrayList<>();
     private ButtonGroup answerGroup;
     private Course course;
+    private Quiz existingQuiz;
 
-
-    public QuestionsForm(Lesson lesson, String quizId, int totalQuestions ,Course c) {
+    public QuestionsForm(Lesson lesson, String quizId, int totalQuestions ,Course c, Quiz existingQuiz) {
         this.lesson = lesson;
         this.quizId = quizId;
         this.totalQuestions = totalQuestions;
         this.course = c;
+        this.existingQuiz = existingQuiz;
 
-        setContentPane(mainPanel);
-        setTitle("Create Quiz Questions: " + quizId);
+        if (existingQuiz != null) {
+            this.tempQuestions.addAll(existingQuiz.getQuestions());
+            this.totalQuestions = this.tempQuestions.size();
+            setTitle("Edit Quiz Questions: " + quizId);
+        } else {
+            setTitle("Create Quiz Questions: " + quizId);
+        }
+
         setContentPane(mainPanel);
         setSize(700, 550);
         setLocationRelativeTo(null);
@@ -57,6 +64,11 @@ public class QuestionsForm extends JFrame {
         for (int i = 1; i <= totalQuestions; i++) {
             questionNumberComboBox.addItem(i);
         }
+
+        if (existingQuiz != null) {
+            questionNumberComboBox.setEnabled(false);
+        }
+
 
         setupListeners();
         loadQuestionInput();
@@ -115,14 +127,26 @@ public class QuestionsForm extends JFrame {
             else if ("C".equals(correctKey)) radioButtonC.setSelected(true);
             else if ("D".equals(correctKey)) radioButtonD.setSelected(true);
 
-            nextButton.setText("Update Question");
+            // Update button text to reflect the current action
+            if (tempQuestions.size() == totalQuestions) {
+                nextButton.setText("Update & Finish Quiz");
+            } else {
+                nextButton.setText("Update Question");
+            }
+
 
         } else {
-            nextButton.setText("Save Question");
+            if (tempQuestions.size() == totalQuestions) {
+                nextButton.setText("Update & Finish Quiz");
+            } else {
+                nextButton.setText("Save Question");
+            }
         }
 
-        if (tempQuestions.size() == totalQuestions) {
-            nextButton.setText("Update & Finish Quiz");
+        if (tempQuestions.size() == totalQuestions && existingQuiz == null) {
+            nextButton.setText("Finish Quiz");
+        } else if (existingQuiz != null) {
+            nextButton.setText("Update Quiz");
         }
     }
 
@@ -168,6 +192,7 @@ public class QuestionsForm extends JFrame {
             int listIndex = currentQuestionIndex - 1;
 
             if (listIndex < tempQuestions.size()) {
+                // Update existing question
                 tempQuestions.set(listIndex, newQuestion);
                 JOptionPane.showMessageDialog(this, "Question " + currentQuestionIndex + " updated successfully.");
             } else {
@@ -175,9 +200,15 @@ public class QuestionsForm extends JFrame {
                 JOptionPane.showMessageDialog(this, "Question " + currentQuestionIndex + " saved successfully.");
             }
 
+
             if (tempQuestions.size() == totalQuestions) {
+
+                String finishMessage = existingQuiz != null ?
+                        "All questions have been updated. Do you want to finalize the quiz update now?" :
+                        "All questions have been entered. Do you want to finalize the quiz now?";
+
                 int confirm = JOptionPane.showConfirmDialog(this,
-                        "All questions have been entered. Do you want to finalize the quiz now?",
+                        finishMessage,
                         "Quiz Complete", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
@@ -206,16 +237,20 @@ public class QuestionsForm extends JFrame {
         }
 
         try {
-            Quiz newQuiz = new Quiz(this.quizId, (ArrayList<Question>) tempQuestions);
-            lesson.addQuiz(newQuiz);
+            Quiz finalizedQuiz;
+            if (existingQuiz != null) {
+                existingQuiz.setQuestions((ArrayList<Question>) tempQuestions);
+                finalizedQuiz = existingQuiz;
+            } else {
+                finalizedQuiz = new Quiz(this.quizId, (ArrayList<Question>) tempQuestions);
+                lesson.addQuiz(finalizedQuiz);
+            }
 
             CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
             db.updateObject(course,course);
 
-
-
             JOptionPane.showMessageDialog(this,
-                    "Quiz '" + newQuiz.getQuizId() + "' successfully created and attached to lesson!");
+                    "Quiz '" + finalizedQuiz.getQuizId() + "' successfully saved/updated!");
 
             dispose();
 

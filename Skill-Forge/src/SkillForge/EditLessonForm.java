@@ -3,6 +3,7 @@ package SkillForge;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class EditLessonForm extends JFrame {
 
@@ -11,6 +12,7 @@ public class EditLessonForm extends JFrame {
     private JTextField textField2; // content
     private JButton saveButton;
     private JTextField textField3; // id
+    private JButton manageQuizButton;
 
     private Course course;
     private Lesson lesson;
@@ -33,12 +35,44 @@ public class EditLessonForm extends JFrame {
         textField1.setText(lesson.getLessonTitle());
         textField2.setText(lesson.getLessonContent());
 
+        updateQuizButtonText();
+
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveLessonChanges();
             }
         });
+
+        manageQuizButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleQuizManagement();
+            }
+        });
+    }
+
+    private void updateQuizButtonText() {
+        if (lesson.getQuiz() != null) {
+            int numQuestions = lesson.getQuiz().getQuestions().size();
+            manageQuizButton.setText("Edit Quiz Questions (" + numQuestions + " Qs)");
+        } else {
+            manageQuizButton.setText("Create New Quiz");
+        }
+    }
+
+    private void handleQuizManagement() {
+        if (lesson.getQuiz() != null) {
+            Quiz existingQuiz = lesson.getQuiz();
+            List<Question> questions = existingQuiz.getQuestions();
+
+            new QuestionsForm(lesson, existingQuiz.getQuizId(), questions.size(),course ,existingQuiz);
+
+        } else {
+            new CreateQuiz(course,lesson);
+        }
+
+        dispose();
     }
 
     private void saveLessonChanges() {
@@ -46,7 +80,7 @@ public class EditLessonForm extends JFrame {
         String newContent = textField2.getText().trim();
 
         if (newTitle.isEmpty() || newContent.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Title and Content cannot be empty.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Title and Content cannot be empty.");
             return;
         }
 
@@ -57,7 +91,7 @@ public class EditLessonForm extends JFrame {
             CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
             db.updateObject(course, course);
 
-            JOptionPane.showMessageDialog(this, "Lesson updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lesson updated successfully!");
 
             if (parentForm != null) {
                 parentForm.loadLessons();

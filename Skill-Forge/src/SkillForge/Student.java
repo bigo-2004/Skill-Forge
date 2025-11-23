@@ -1,5 +1,6 @@
 package SkillForge;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Hashtable;
 public class Student extends User {
     //                key -> will be lessonId value will be scored
     private Hashtable<String, Integer> quizResults = new Hashtable<>();
+    private JSONArray certificates = new JSONArray();
 
     public Student(String userId, String userName, String email, String password, String role) {
         super(userId, userName, email, password, role);
@@ -24,6 +26,15 @@ public class Student extends User {
 
     public void setQuizResults(Hashtable<String, Integer> quizResults) {
         this.quizResults = quizResults;
+
+    }
+
+    public JSONArray getCertificates() {
+        return certificates;
+    }
+
+    public void setCertificates(JSONArray certificates) {
+        this.certificates = certificates;
     }
 
     @Override
@@ -38,6 +49,7 @@ public class Student extends User {
         for (String key : quizResults.keySet()) {
             jsonQuiz.put(key, quizResults.get(key));
         }
+        jsonObject.put("certificates", certificates);
         jsonObject.put("quizResults", jsonQuiz);
         return jsonObject;
     }
@@ -57,6 +69,9 @@ public class Student extends User {
                 String key = keys.get(i);
                 int value = quizResultsObject.getInt(key);
                 quizResults.put(key, value);
+            }
+            if (jsonObject.has("certificates")) {
+                s.setCertificates(jsonObject.getJSONArray("certificates"));
             }
             s.setQuizResults(quizResults);
         }

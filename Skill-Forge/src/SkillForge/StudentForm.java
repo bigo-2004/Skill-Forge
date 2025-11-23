@@ -120,7 +120,7 @@ public class StudentForm extends JFrame{
                 certForm.setVisible(true);
 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error loading certificates: " + ex.getMessage());
+                ex.printStackTrace();
             }
         });
 

@@ -19,14 +19,12 @@ public class CourseDetailsForm extends JFrame {
     private JButton removeStudentButton;
     private JButton deleteLessonButton;
     private JButton reloadButton;
-    // Course Fields
     private JTextField titleField;
     private JTextField discriptionField;
     private JTextField idField;
-    private JRadioButton inactiveRadioButton;
-    private JRadioButton activeRadioButton;
     private JButton saveButton;
     private JButton addQuizButton;
+    private JButton deleteQuizButton;
 
     private Course course;
 
@@ -36,13 +34,10 @@ public class CourseDetailsForm extends JFrame {
         setTitle("Course Details: " + course.getCourseTitle());
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 700);
+        setSize(850, 700);
         setLocationRelativeTo(null);
         setVisible(true);
 
-        ButtonGroup statusGroup = new ButtonGroup();
-        statusGroup.add(activeRadioButton);
-        statusGroup.add(inactiveRadioButton);
 
         loadCourseDetails();
         loadLessons();
@@ -90,7 +85,13 @@ public class CourseDetailsForm extends JFrame {
         addQuizButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            addQuizToLesson();
+                addQuizToLesson();
+            }
+        });
+        deleteQuizButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteQuizFromLesson();
             }
         });
     }
@@ -103,18 +104,68 @@ public class CourseDetailsForm extends JFrame {
         }
         String lessonId = (String) lessonsTable.getValueAt(selectedRow, 0);
 
-        Lesson lessonToAddQuizTo = null;
+        Lesson lessonToManageQuiz = null;
         for (Lesson lesson : course.getLessons()) {
             if (lesson.getLessonID().equals(lessonId)) {
-                lessonToAddQuizTo = lesson;
+                lessonToManageQuiz = lesson;
                 break;
             }
         }
-        if (lessonToAddQuizTo == null) {
+        if (lessonToManageQuiz == null) {
             JOptionPane.showMessageDialog(this, "Lesson not found.");
             return;
         }
-        new CreateQuiz(course,lessonToAddQuizTo);
+
+        if (lessonToManageQuiz.getQuiz() != null) {
+            JOptionPane.showMessageDialog(this,
+                    "A quiz already exists for this lesson. Please use the 'Edit Lesson' button or double-click the lesson to modify the quiz questions.",
+                    "Quiz Exists", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        new CreateQuiz(course,lessonToManageQuiz);
+
+    }
+
+    private void deleteQuizFromLesson() {
+        int selectedRow = lessonsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a lesson whose quiz you want to delete.");
+            return;
+        }
+        String lessonId = (String) lessonsTable.getValueAt(selectedRow, 0);
+
+        Lesson lessonToDeleteQuizFrom = null;
+        for (Lesson lesson : course.getLessons()) {
+            if (lesson.getLessonID().equals(lessonId)) {
+                lessonToDeleteQuizFrom = lesson;
+                break;
+            }
+        }
+
+        if (lessonToDeleteQuizFrom == null || lessonToDeleteQuizFrom.getQuiz() == null) {
+            JOptionPane.showMessageDialog(this, "The selected lesson has no quiz to delete.", "No Quiz Found", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to permanently delete the quiz for lesson: " + lessonToDeleteQuizFrom.getLessonTitle() + "?",
+                "Confirm Quiz Deletion", JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            lessonToDeleteQuizFrom.setQuiz(null);
+            CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
+            db.updateObject(course, course);
+            loadLessons();
+            JOptionPane.showMessageDialog(this, "Quiz successfully deleted from lesson '" + lessonToDeleteQuizFrom.getLessonTitle() );
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error deleting quiz: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void loadCourseDetails() {
@@ -124,11 +175,7 @@ public class CourseDetailsForm extends JFrame {
         titleField.setText(course.getCourseTitle());
         discriptionField.setText(course.getCourseDescription());
 
-        if ("Active".equalsIgnoreCase(course.getCourseStatus())) {
-            activeRadioButton.setSelected(true);
-        } else {
-            inactiveRadioButton.setSelected(true);
-        }
+
     }
 
     private void saveCourseDetails() {
@@ -136,11 +183,7 @@ public class CourseDetailsForm extends JFrame {
         String newDescription = discriptionField.getText().trim();
         String newStatus = "";
 
-        if (activeRadioButton.isSelected()) {
-            newStatus = "Active";
-        } else if (inactiveRadioButton.isSelected()) {
-            newStatus = "Inactive";
-        }
+
 
         if (newTitle.isEmpty() || newDescription.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Title and Description cannot be empty.");
@@ -197,8 +240,6 @@ public class CourseDetailsForm extends JFrame {
         }
 
         String lessonIdToRemove = (String) lessonsTable.getValueAt(selectedRow, 0);
-
-
         String lessonTitle = (String) lessonsTable.getValueAt(selectedRow, 1);
 
         int confirm = JOptionPane.showConfirmDialog(this,
@@ -242,8 +283,6 @@ public class CourseDetailsForm extends JFrame {
         }
 
         String studentIdToRemove = (String) studentsTable.getValueAt(selectedRow, 0);
-
-
         String studentName = (String) studentsTable.getValueAt(selectedRow, 1);
 
         int confirm = JOptionPane.showConfirmDialog(this,
@@ -281,7 +320,7 @@ public class CourseDetailsForm extends JFrame {
 
 
     public void loadLessons() {
-        String[] columns = {"Lesson ID", "Title", "Content"};
+        String[] columns = {"Lesson ID", "Title", "Quiz Status"};
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) { return false; }
         };
@@ -293,7 +332,8 @@ public class CourseDetailsForm extends JFrame {
 
 
         for (Lesson lesson : course.getLessons()) {
-            String[] row = {lesson.getLessonID(), lesson.getLessonTitle(), lesson.getLessonContent()};
+            String quizStatus = lesson.getQuiz() != null ? "Quiz Exists" : "No Quiz";
+            String[] row = {lesson.getLessonID(), lesson.getLessonTitle(), quizStatus};
             model.addRow(row);
         }
 
@@ -301,7 +341,14 @@ public class CourseDetailsForm extends JFrame {
     }
 
     public void loadStudents() {
-        String[] columns = {"Student ID", "Username", "Email"};
+        int totalQuizzesInCourse = 0;
+        for (Lesson lesson : course.getLessons()) {
+            if (lesson.getQuiz() != null) {
+                totalQuizzesInCourse++;
+            }
+        }
+
+        String[] columns = {"Student ID", "Username", "Email", "Quizzes Done"};
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) { return false; }
         };
@@ -317,21 +364,35 @@ public class CourseDetailsForm extends JFrame {
 
         ArrayList<Student> students = course.getStudents();
         for (Student s : students) {
-            User studentUser = (User) userDb.getObjectById(s.getUserId());
+            Student currentStudentData = (Student) userDb.getObjectById(s.getUserId());
+
+            if (currentStudentData == null) {
+                continue;
+            }
+
 
             String studentId = s.getUserId();
             String username = "N/A (Details Missing)";
             String email = "N/A (Details Missing)";
+            String quizzesDoneText;
 
-            if (studentUser != null) {
-                username = studentUser.getUserName();
-                email = studentUser.getEmail();
-            } else {
-                username = s.getUserName();
-                email = s.getEmail();
+            username = currentStudentData.getUserName();
+            email = currentStudentData.getEmail();
+
+
+            int quizzesCompleted = 0;
+            for (Lesson lesson : course.getLessons()) {
+                if (lesson.getQuiz() != null) {
+                    String quizId = lesson.getQuiz().getQuizId();
+                    if (currentStudentData.getQuizResults().containsKey(quizId)) {
+                        quizzesCompleted++;
+                    }
+                }
             }
 
-            String[] row = {studentId, username, email};
+            quizzesDoneText = quizzesCompleted + " / " + totalQuizzesInCourse;
+
+            String[] row = {studentId, username, email, quizzesDoneText};
             model.addRow(row);
         }
 

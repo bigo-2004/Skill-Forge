@@ -49,7 +49,9 @@ public class Lesson
         this.lessonContent = lessonContent;
     }
 
-
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
 
     public Lesson(String lessonID, String lessonTitle, String lessonContent, String courseID) {
         this.lessonID = lessonID;

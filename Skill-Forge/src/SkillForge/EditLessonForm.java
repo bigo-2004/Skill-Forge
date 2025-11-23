@@ -26,7 +26,7 @@ public class EditLessonForm extends JFrame {
         setTitle("Edit Lesson: " + lesson.getLessonTitle());
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 250);
+        setSize(500, 250);
         setLocationRelativeTo(null);
         setVisible(true);
 

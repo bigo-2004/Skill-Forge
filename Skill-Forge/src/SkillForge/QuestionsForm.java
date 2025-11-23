@@ -65,9 +65,6 @@ public class QuestionsForm extends JFrame {
             questionNumberComboBox.addItem(i);
         }
 
-        if (existingQuiz != null) {
-            questionNumberComboBox.setEnabled(false);
-        }
 
 
         setupListeners();

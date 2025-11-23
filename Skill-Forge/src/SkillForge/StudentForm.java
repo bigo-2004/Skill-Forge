@@ -14,6 +14,7 @@ public class StudentForm extends JFrame{
     private JButton enrollButton;
     private JButton logoutButton;
     private JPanel mainPanel;
+    private JButton CertificateEarnedButton;
 
     private User student;
 
@@ -94,9 +95,24 @@ public class StudentForm extends JFrame{
                 }
             }
         });
+        CertificateEarnedButton.addActionListener(e -> {
+            try {
+                UserJsonDatabase userDb = new UserJsonDatabase("users.json");
+                Course selectedCourse =  (Course) CoursesTable.getValueAt(CoursesTable.getSelectedRow(), 0);
+                CertificateManager certManager = new CertificateManager(selectedCourse, userDb);
+                certManager.generateCertificatesForCompletedStudents();
+
+                CertificatesPanel certForm = new CertificatesPanel((Student) student, certManager);
+                certForm.setVisible(true);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error loading certificates: " + ex.getMessage());
+            }
+        });
+
     }
 
-    private void viewCourseDetails() {
+        private void viewCourseDetails() {
         int selectedRow = CoursesTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Please select a course to view details.");

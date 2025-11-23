@@ -96,9 +96,23 @@ public class StudentForm extends JFrame{
             }
         });
         CertificateEarnedButton.addActionListener(e -> {
+            int selectedRow = CoursesTable.getSelectedRow();
+            if(selectedRow == -1){
+                JOptionPane.showMessageDialog(null, "Please select a course.");
+                return;
+            }
+
+            String courseId = (String) CoursesTable.getValueAt(selectedRow, 0);
             try {
+                CourseJsonDatabase courseDB = new CourseJsonDatabase("courses.json");
+                Course selectedCourse = (Course) courseDB.getObjectById(courseId);
+
+                if(selectedCourse == null){
+                    JOptionPane.showMessageDialog(null, "Course not found.");
+                    return;
+                }
+
                 UserJsonDatabase userDb = new UserJsonDatabase("users.json");
-                Course selectedCourse =  (Course) CoursesTable.getValueAt(CoursesTable.getSelectedRow(), 0);
                 CertificateManager certManager = new CertificateManager(selectedCourse, userDb);
                 certManager.generateCertificatesForCompletedStudents();
 

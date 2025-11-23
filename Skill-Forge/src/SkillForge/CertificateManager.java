@@ -2,7 +2,6 @@ package SkillForge;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +35,9 @@ public class CertificateManager {
         return (certs != null) ? certs : new JSONArray();
     }
 
-
     private boolean hasCompletedCourse(Student student) {
+        if(course == null) return false;
         for (Lesson lesson : course.getLessons()) {
-
             if (lesson.getQuiz() != null) {
                 Integer score = student.getQuizResults().get(lesson.getLessonID());
                 if (score == null || score < 50) {
@@ -51,9 +49,18 @@ public class CertificateManager {
     }
 
     private void generateCertificate(Student student) {
-
         JSONObject studentJson = (JSONObject) userDb.getObjectById(student.getUserId());
         if (studentJson == null) return;
+
+        JSONArray certificates = studentJson.optJSONArray("certificates");
+        if (certificates == null) certificates = new JSONArray();
+
+        for(int i=0;i<certificates.length();i++){
+            JSONObject c = certificates.getJSONObject(i);
+            if(c.getString("courseId").equals(course.getCourseID())){
+                return;
+            }
+        }
 
         JSONObject certificate = new JSONObject();
         certificate.put("certificateId", UUID.randomUUID().toString());
@@ -61,17 +68,10 @@ public class CertificateManager {
         certificate.put("courseId", course.getCourseID());
         certificate.put("issueDate", LocalDate.now().toString());
 
-        // Append certificate to "certificates" array
-        JSONArray certificates = studentJson.optJSONArray("certificates");
-        if (certificates == null) certificates = new JSONArray();
-
         certificates.put(certificate);
         studentJson.put("certificates", certificates);
 
-        userDb.updateObject(
-                User.fromJson(studentJson),
-                User.fromJson(studentJson).toJson()
-        );
+        userDb.updateObject(User.fromJson(studentJson), User.fromJson(studentJson).toJson());
     }
 
     private List<Student> getAllStudents() {
@@ -80,7 +80,6 @@ public class CertificateManager {
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject obj = array.getJSONObject(i);
-
             if (obj.getString("role").equals("student")) {
                 students.add((Student) User.fromJson(obj));
             }

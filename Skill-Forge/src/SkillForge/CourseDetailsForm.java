@@ -118,8 +118,7 @@ public class CourseDetailsForm extends JFrame {
 
         if (lessonToManageQuiz.getQuiz() != null) {
             JOptionPane.showMessageDialog(this,
-                    "A quiz already exists for this lesson. Please use the 'Edit Lesson' button or double-click the lesson to modify the quiz questions.",
-                    "Quiz Exists", JOptionPane.WARNING_MESSAGE);
+                    "A quiz already exists for this lesson. Please use the 'Edit Lesson' button or double-click the lesson to modify the quiz questions.");
             return;
         }
 
@@ -144,7 +143,7 @@ public class CourseDetailsForm extends JFrame {
         }
 
         if (lessonToDeleteQuizFrom == null || lessonToDeleteQuizFrom.getQuiz() == null) {
-            JOptionPane.showMessageDialog(this, "The selected lesson has no quiz to delete.", "No Quiz Found", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "The selected lesson has no quiz to delete.");
             return;
         }
 
@@ -156,15 +155,48 @@ public class CourseDetailsForm extends JFrame {
             return;
         }
 
+        String deletedQuizId = lessonToDeleteQuizFrom.getQuiz().getQuizId();
+
         try {
             lessonToDeleteQuizFrom.setQuiz(null);
+            removeQuizResultsFromAllStudents(deletedQuizId);
             CourseJsonDatabase db = new CourseJsonDatabase("courses.json");
             db.updateObject(course, course);
+
             loadLessons();
-            JOptionPane.showMessageDialog(this, "Quiz successfully deleted from lesson '" + lessonToDeleteQuizFrom.getLessonTitle() );
+            JOptionPane.showMessageDialog(this, "Quiz successfully deleted from lesson" + lessonToDeleteQuizFrom.getLessonTitle() );
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error deleting quiz: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    private void removeQuizResultsFromAllStudents(String quizId) {
+        UserJsonDatabase userDb = new UserJsonDatabase("users.json");
+
+        try {
+            org.json.JSONArray jsonArray = userDb.loadAll();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                org.json.JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String userId = jsonObject.getString("id");
+
+                Object userObj = userDb.getObjectById(userId);
+
+                if (userObj instanceof Student) {
+                    Student student = (Student) userObj;
+
+                    if (student.getQuizResults().containsKey(quizId)) {
+                        student.getQuizResults().remove(quizId);
+                        userDb.updateObject(student, student);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error cleaning up quiz results for quiz ID " + quizId + ": " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Warning: Could not remove quiz results from all students in the database.");
         }
     }
 

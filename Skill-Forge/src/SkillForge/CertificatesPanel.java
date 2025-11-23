@@ -2,88 +2,103 @@ package SkillForge;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class CertificatesPanel extends JPanel {
+public class CertificatesPanel extends JFrame {
 
     private Student student;
     private CertificateManager certificateManager;
+    private JLabel CertificateName;
+    private JLabel StudentLabel;
+    private JLabel CourseLabel;
+    private JLabel StudentName;
+    private JLabel Signature;
+    private JLabel Date;
+    private JButton downlaodButton;
+    private JLabel CourseID;
+    private JLabel Label1;
+    private JLabel Label2;
+    private JLabel Label3;
+    private JLabel Label4;
+    private JLabel Label5;
+    private JLabel Label6;
+
 
     public CertificatesPanel(Student student, CertificateManager certificateManager) {
         this.student = student;
         this.certificateManager = certificateManager;
 
-        setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        initComponents();
+        loadCertificate();
 
-        JLabel title = new JLabel("📜 Certificates Earned");
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        add(title, BorderLayout.NORTH);
+        downlaodButton.addActionListener(e -> downloadCertificate());
+    }
 
-        // Load certificates
-        JSONArray certificates = certificateManager.getCertificates(student);
+    private void initComponents() {
+        setTitle("Certificate");
+        setSize(500, 350);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLayout(null);
+        getContentPane().setBackground(new Color(250, 250, 210));
 
-        if (certificates.length() == 0) {
-            add(new JLabel("No certificates yet"), BorderLayout.CENTER);
+        StudentName = new JLabel();
+        StudentName.setFont(new Font("Arial", Font.BOLD, 20));
+        StudentName.setBounds(160, 100, 300, 25);
+        StudentName.setForeground(new Color(0, 102, 204));
+        add(StudentName);
+
+        Date = new JLabel();
+        Date.setFont(new Font("Arial", Font.BOLD, 17));
+        Date.setBounds(200, 235, 300, 20);
+        Date.setForeground(new Color(0, 153, 0));
+        add(Date);
+
+        Signature = new JLabel("Instructor Signature: __________________");
+        Signature.setFont(new Font("Arial", Font.ITALIC, 14));
+        Signature.setBounds(100, 280, 350, 20);
+        add(Signature);
+
+        downlaodButton = new JButton("Download JSON ⬇");
+        downlaodButton.setBounds(180, 310, 160, 25);
+        add(downlaodButton);
+
+        if(certificateManager.getCertificates(student).length() > 0){
+            JSONObject cert = certificateManager.getCertificates(student).getJSONObject(0);
+            CourseID.setText("Course ID: " + cert.getString("courseId"));
+        }
+    }
+
+    private void loadCertificate() {
+        JSONArray certs = certificateManager.getCertificates(student);
+        if(certs.length() == 0){
+            JOptionPane.showMessageDialog(this, "No certificates yet");
             return;
         }
 
-        JPanel listPanel = new JPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBackground(Color.WHITE);
+        JSONObject cert = certs.getJSONObject(0);
+        StudentName.setText(student.getUserName());
+        Date.setText(cert.getString("issueDate"));
+        Signature.setText("Instructor Signature: __________________");
+    }
 
-        for (int i = 0; i < certificates.length(); i++) {
-            JSONObject cert = certificates.getJSONObject(i);
-            listPanel.add(createCertificateCard(cert));
+    private void downloadCertificate() {
+        JSONArray certs = certificateManager.getCertificates(student);
+        if(certs.length() == 0) return;
+
+        JSONObject cert = certs.getJSONObject(0);
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new java.io.File("Certificate_" + cert.getString("certificateId") + ".json"));
+        if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            try(FileWriter fw = new FileWriter(fileChooser.getSelectedFile())){
+                fw.write(cert.toString(4));
+                JOptionPane.showMessageDialog(this, "Certificate saved as JSON!");
+            } catch(Exception ex){
+                JOptionPane.showMessageDialog(this, "Error saving JSON: " + ex.getMessage());
+            }
         }
-
-        JScrollPane scrollPane = new JScrollPane(listPanel);
-        scrollPane.setBorder(null);
-
-        add(scrollPane, BorderLayout.CENTER);
-    }
-
-    private JPanel createCertificateCard(JSONObject cert) {
-        JPanel card = new JPanel();
-        card.setLayout(new BorderLayout());
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10),
-                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1)
-        ));
-        card.setBackground(new Color(245, 245, 245));
-
-        String certId = cert.getString("certificateId");
-        String courseId = cert.getString("courseId");
-        String date = cert.getString("issueDate");
-
-        JLabel info = new JLabel(
-                "<html>"
-                        + "<b>Certificate ID:</b> " + certId + "<br>"
-                        + "<b>Course:</b> " + courseId + "<br>"
-                        + "<b>Issued:</b> " + date
-                        + "</html>"
-        );
-        info.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        JButton viewBtn = new JButton("View");
-        viewBtn.addActionListener(e -> showCertificatePopup(cert));
-
-        card.add(info, BorderLayout.CENTER);
-        card.add(viewBtn, BorderLayout.EAST);
-
-        return card;
-    }
-
-    private void showCertificatePopup(JSONObject cert) {
-        JOptionPane.showMessageDialog(
-                this,
-                "Certificate ID: " + cert.getString("certificateId")
-                        + "\nCourse: " + cert.getString("courseId")
-                        + "\nIssued: " + cert.getString("issueDate"),
-                "Certificate Details",
-                JOptionPane.INFORMATION_MESSAGE
-        );
     }
 }

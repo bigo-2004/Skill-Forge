@@ -132,13 +132,24 @@ public class ViewLessonsForm extends JFrame {
             return;
         }
 
+        if (!selectedLesson.isWatchedByStudent(student.getUserId())) {
+            JOptionPane.showMessageDialog(this, "You must complete the lesson content before attempting the quiz.");
+            return;
+        }
+
         if (selectedLesson.getQuiz() == null) {
             JOptionPane.showMessageDialog(this, "This lesson does not have an attached quiz.");
             return;
         }
-//        UserJsonDatabase db = new UserJsonDatabase("users.json");
-//        Student freshStudent = (Student) db.getObjectById(student.getUserId());
 
-        new QuizForm(course, selectedLesson, student);
+        User freshStudent = student;
+        try {
+            UserJsonDatabase userDb = new UserJsonDatabase("users.json");
+            freshStudent = (User) userDb.getObjectById(student.getUserId());
+        } catch (Exception e) {
+            System.out.println("Warning: Could not fetch fresh student data from database.");
+        }
+
+        new QuizForm(course, selectedLesson, freshStudent);
     }
 }

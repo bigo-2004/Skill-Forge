@@ -47,7 +47,24 @@ public class UserJsonDatabase extends JsonDatabase {
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             if(jsonObject.getString("id").equals(id) ) {
-                return new User(jsonObject.getString("id"), jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("passwordHash"), jsonObject.getString("role"));
+                try {
+                    String role = jsonObject.getString("role");
+                    if ("Student".equalsIgnoreCase(role)) {
+                        return Student.fromJsonToStudent(jsonObject);
+                    } else if ("Instructor".equalsIgnoreCase(role)) {
+                        return Instructor.fromJsonToInstructor(jsonObject);
+                    } else {
+                        return new User(jsonObject.getString("id"), jsonObject.getString("username"),
+                                jsonObject.getString("email"), jsonObject.getString("passwordHash"),
+                                role);
+                    }
+
+                } catch (JSONException e) {
+                    System.out.println("Error parsing user JSON for ID " + id + ": " + e.getMessage());
+                    return new User(jsonObject.getString("id"), jsonObject.getString("username"),
+                            jsonObject.getString("email"), jsonObject.getString("passwordHash"),
+                            jsonObject.getString("role"));
+                }
             }
         }
         return null;

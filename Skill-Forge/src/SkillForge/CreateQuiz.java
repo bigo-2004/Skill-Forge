@@ -26,6 +26,13 @@ public class CreateQuiz extends JFrame {
         this.lesson = lesson;
         setContentPane(mainPanel);
         setTitle("Create Quiz for: " + lesson.getLessonTitle());
+
+        if (lesson.getQuiz() != null) {
+            JOptionPane.showMessageDialog(this,
+                    "A quiz already exists for this lesson (ID: " + lesson.getQuiz().getQuizId() + "). Each lesson can have only one quiz.");
+            dispose();
+            return;
+        }
         setSize(500, 250);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

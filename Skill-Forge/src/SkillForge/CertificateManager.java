@@ -42,7 +42,6 @@ public class CertificateManager {
 
             if (lesson.getQuiz() != null) {
                 Integer score = student.getQuizResults().get(lesson.getLessonID());
-
                 if (score == null || score < 50) {
                     return false;
                 }
@@ -52,11 +51,10 @@ public class CertificateManager {
     }
 
     private void generateCertificate(Student student) {
-        // Fetch student JSON from database
+
         JSONObject studentJson = (JSONObject) userDb.getObjectById(student.getUserId());
         if (studentJson == null) return;
 
-        // Build certificate JSON
         JSONObject certificate = new JSONObject();
         certificate.put("certificateId", UUID.randomUUID().toString());
         certificate.put("studentId", student.getUserId());
@@ -71,8 +69,8 @@ public class CertificateManager {
         studentJson.put("certificates", certificates);
 
         userDb.updateObject(
-                User.fromJson(studentJson),        // old object
-                User.fromJson(studentJson).toJson() // new object
+                User.fromJson(studentJson),
+                User.fromJson(studentJson).toJson()
         );
     }
 

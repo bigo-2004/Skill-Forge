@@ -34,9 +34,7 @@ public class InstructorForm extends JFrame {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                new LoginForm();
-            }
+                AppUtils.handleLogout();            }
         });
 
         addCourseButton.addActionListener(new ActionListener() {

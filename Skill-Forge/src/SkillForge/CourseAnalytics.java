@@ -1,95 +1,109 @@
 package SkillForge;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseAnalytics {
-
     private Course course;
     private UserJsonDatabase userDb;
+    private List<Student> courseStudents;
 
     public CourseAnalytics(Course course, UserJsonDatabase userDb) {
         this.course = course;
         this.userDb = userDb;
+        this.courseStudents = loadStudentsWithQuizData();
     }
 
-    private List<Student> getAllStudents() {
-        JSONArray jsonArray = userDb.loadAll();
+    private List<Student> loadStudentsWithQuizData() {
+        JSONArray rawUsersArray = userDb.loadAll();
+        List<User> allUsers = new ArrayList<>();
         List<Student> students = new ArrayList<>();
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-            if (jsonObject.getString("role").equals("student")) {
-                students.add((Student) User.fromJson(jsonObject));
+        for (int i = 0; i < rawUsersArray.length(); i++) {
+            JSONObject jsonObject = rawUsersArray.getJSONObject(i);
+            try {
+                String role = jsonObject.getString("role");
+                if ("Student".equalsIgnoreCase(role)) {
+                    allUsers.add(Student.fromJsonToStudent(jsonObject));
+                } else if ("Instructor".equalsIgnoreCase(role)) {
+                    allUsers.add(Instructor.fromJsonToInstructor(jsonObject));
+                }
+            } catch (Exception e) {
+                System.err.println("Analytics Error: Failed to deserialize user object. " + e.getMessage());
             }
         }
+
+        for (User user : allUsers) {
+            if (user instanceof Student) {
+                students.add((Student) user);
+            }
+        }
+
         return students;
     }
 
-
-    private int getScore(Student student, String lessonId) {
-        Hashtable<String, Integer> quizResults = student.getQuizResults();
-        Integer score = quizResults.get(lessonId);
-        return (score != null) ? score : 0;
+    public List<Student> getCourseStudents() {
+        return courseStudents;
     }
 
-    public double calculateLessonAverage(String lessonId) throws Exception {
-        List<Student> students = getAllStudents();
-        double totalScoreSum = 0;
-        int studentCountWithScores = 0;
+    public double calculateLessonAverage(String lessonId) {
+        int totalScore = 0;
+        int studentCount = 0;
 
-        for (Student student : students) {
-            int score = getScore(student, lessonId);
+        String quizId = findQuizIdByLessonId(lessonId);
+        if (quizId == null) return 0.0;
 
-            if (score > 0) {
-                totalScoreSum += score;
-                studentCountWithScores++;
+        for (Student student : this.courseStudents) {
+            if (student.getQuizResults().containsKey(quizId)) {
+                totalScore += student.getQuizResults().get(quizId);
+                studentCount++;
             }
         }
 
-        if (studentCountWithScores == 0) {
-            return 0.0;
-        }
+        if (studentCount == 0) return 0.0;
 
-        double averagePercentage = totalScoreSum / studentCountWithScores;
-        return averagePercentage / 100.0;
+        // Returns the average score directly as an integer percentage (e.g., 75.0)
+        return (double) totalScore / studentCount;
     }
 
-    public double calculateCourseCompletionPercentage() throws Exception {
-        List<Student> students = getAllStudents();
-        if (students.isEmpty()) {
-            return 0.0;
-        }
 
-        List<String> requiredLessonIds = new ArrayList<>();
+    public double calculateCourseCompletionPercentage() {
+        if (course.getLessons().isEmpty() || this.courseStudents.isEmpty()) return 0.0;
+
+        List<String> quizIds = new ArrayList<>();
         for (Lesson lesson : course.getLessons()) {
             if (lesson.getQuiz() != null) {
-                requiredLessonIds.add(lesson.getLessonID());
+                quizIds.add(lesson.getQuiz().getQuizId());
             }
         }
 
-        int studentsCompletedAll = 0;
+        if (quizIds.isEmpty()) return 0.0;
 
-        for (Student student : students) {
-            boolean passedAllRequired = true;
+        int studentsPassedAllQuizzesCount = 0;
 
-            for (String lessonId : requiredLessonIds) {
-                int score = getScore(student, lessonId);
-
-                if (score < 50) {
-                    passedAllRequired = false;
+        for (Student student : this.courseStudents) {
+            boolean passedAllQuizzes = true;
+            for (String quizId : quizIds) {
+                if (!student.getQuizResults().containsKey(quizId) || student.getQuizResults().get(quizId) < 50) {
+                    passedAllQuizzes = false;
                     break;
                 }
             }
-            if (passedAllRequired) {
-                studentsCompletedAll++;
+            if (passedAllQuizzes) {
+                studentsPassedAllQuizzesCount++;
             }
         }
 
-        return (double) studentsCompletedAll / students.size();
+        return (double) studentsPassedAllQuizzesCount / this.courseStudents.size();
+    }
+    private String findQuizIdByLessonId(String lessonId) {
+        for (Lesson lesson : course.getLessons()) {
+            if (lesson.getLessonID().equals(lessonId) && lesson.getQuiz() != null) {
+                return lesson.getQuiz().getQuizId();
+            }
+        }
+        return null;
     }
 }

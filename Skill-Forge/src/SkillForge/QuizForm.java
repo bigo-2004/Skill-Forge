@@ -175,9 +175,8 @@ public class QuizForm extends JFrame {
             UserJsonDatabase userDb = new UserJsonDatabase("users.json");
             Student studentOld = (Student) student;
             Student studentNew = Student.fromJsonToStudent(studentOld.toJson());
-            Hashtable<String, Integer> merged = studentOld.getQuizResults();
-            merged.put(lesson.getQuiz().getQuizId(), finalScorePercentage);
-            studentNew.setQuizResults(merged);
+            String quizIdKey = lesson.getQuiz().getQuizId();
+            studentNew.getQuizResults().put(quizIdKey, finalScorePercentage);
             userDb.updateObject(studentOld, studentNew);
             studentOld.setQuizResults(studentNew.getQuizResults());
             showResults(x, questions.size(), finalScorePercentage, passed);

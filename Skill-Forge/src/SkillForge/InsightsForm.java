@@ -71,7 +71,7 @@ public class InsightsForm extends JFrame {
             for (Lesson lesson : lessons) {
                 if (lesson.getQuiz() != null) {
                     double averageRatio = analytics.calculateLessonAverage(lesson.getLessonID());
-                    String averageScoreText = String.format("%.1f%%", averageRatio * 100);
+                    String averageScoreText = String.format("%.1f%%", averageRatio );
                     model.addRow(new Object[]{lesson.getLessonTitle(), averageScoreText});
                 }
             }

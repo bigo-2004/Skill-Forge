@@ -20,8 +20,10 @@ public class CertificateManager {
     public void generateCertificatesForCompletedStudents() throws Exception {
         List<Student> students = getAllStudents();
 
+
         for (Student student : students) {
             if (hasCompletedCourse(student)) {
+
                 generateCertificate(student);
             }
         }
@@ -57,6 +59,7 @@ public class CertificateManager {
     private void generateCertificate(Student student) {
 
 
+
         Student loaded = (Student) userDb.getObjectById(student.getUserId());
         if (loaded == null) return;
 
@@ -88,7 +91,7 @@ public class CertificateManager {
 
 
         Student updated = Student.fromJsonToStudent(studentJson);
-        userDb.updateObject(updated, updated.toJson());
+        userDb.updateObject(loaded, updated);
     }
 
     private List<Student> getAllStudents() {

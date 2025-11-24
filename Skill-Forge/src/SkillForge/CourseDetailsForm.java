@@ -213,7 +213,6 @@ public class CourseDetailsForm extends JFrame {
     private void saveCourseDetails() {
         String newTitle = titleField.getText().trim();
         String newDescription = discriptionField.getText().trim();
-        String newStatus = "";
 
 
 
@@ -224,7 +223,7 @@ public class CourseDetailsForm extends JFrame {
 
         course.setCourseTitle(newTitle);
         course.setCourseDescription(newDescription);
-        course.setCourseStatus(newStatus);
+
 
         try {
             CourseJsonDatabase db = new CourseJsonDatabase("courses.json");

@@ -10,6 +10,11 @@ public class Lesson
     private Quiz quiz;
     private String courseID;
 
+    public String getCourseID() {
+        return courseID;
+    }
+
+
     private Hashtable<String, Boolean> watchedStatus = new Hashtable<>();
 
     public void markAsWatched(String studentId) {

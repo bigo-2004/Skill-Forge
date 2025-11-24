@@ -175,16 +175,17 @@ public class QuizForm extends JFrame {
             Student studentOld = (Student) student;
             Student studentNew = Student.fromJsonToStudent(studentOld.toJson());
 
-            String lessonKey = lesson.getLessonID();
+            String quizKey = lesson.getCourseID() + "-" + lesson.getLessonID() + "-QZ";
+            quizKey = lesson.getQuiz().getQuizId();
 
-            if (!studentNew.canAttemptQuiz(lessonKey)) {
+            if (!studentNew.canAttemptQuiz(quizKey)) {
                 JOptionPane.showMessageDialog(this,
                         "You cannot attempt this quiz anymore. Either you've passed it already or you've used both allowed attempts.",
                         "Attempt Not Allowed", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            studentNew.recordQuizAttempt(lessonKey, finalScorePercentage);
+            studentNew.recordQuizAttempt(quizKey, finalScorePercentage);
 
             userDb.updateObject(studentOld, studentNew);
 

@@ -37,27 +37,27 @@ public class Student extends User {
         this.certificates = certificates;
     }
 
-    public void recordQuizAttempt(String lessonId, int score) {
-        QuizAttemptData data = quizResults.get(lessonId);
+    public void recordQuizAttempt(String quizId, int score) {
+        QuizAttemptData data = quizResults.get(quizId);
         if (data == null) {
             data = new QuizAttemptData(0, 0);
         }
 
         if (data.getAttempts() < 2) {
             data.recordAttempt(score);
-            quizResults.put(lessonId, data);
+            quizResults.put(quizId, data);
         }
     }
 
-    public boolean canAttemptQuiz(String lessonId) {
-        QuizAttemptData data = quizResults.get(lessonId);
+    public boolean canAttemptQuiz(String quizId) {
+        QuizAttemptData data = quizResults.get(quizId);
         if (data == null) return true;
         if (data.getBestScore() >= 50) return false;
         return data.getAttempts() < 2;
     }
 
-    public boolean hasPassedLesson(String lessonId) {
-        QuizAttemptData data = quizResults.get(lessonId);
+    public boolean hasPassedLesson(String quizId) {
+        QuizAttemptData data = quizResults.get(quizId);
         return data != null && data.getBestScore() >= 50;
     }
 

@@ -20,20 +20,28 @@ public class CertificateManager {
     public void generateCertificatesForCompletedStudents() throws Exception {
         List<Student> students = getAllStudents();
 
+
         for (Student student : students) {
             if (hasCompletedCourse(student)) {
+
                 generateCertificate(student);
             }
         }
     }
 
     public JSONArray getCertificates(Student student) {
-        JSONObject json = (JSONObject) userDb.getObjectById(student.getUserId());
-        if (json == null) return new JSONArray();
+
+        Student loaded = (Student) userDb.getObjectById(student.getUserId());
+        if (loaded == null) return new JSONArray();
+
+        JSONObject json = loaded.toJson();
 
         JSONArray certs = json.optJSONArray("certificates");
-        return (certs != null) ? certs : new JSONArray();
+        if (certs == null) return new JSONArray();
+
+        return certs;
     }
+
 
     private boolean hasCompletedCourse(Student student) {
         if(course == null) return false;
@@ -49,29 +57,41 @@ public class CertificateManager {
     }
 
     private void generateCertificate(Student student) {
-        JSONObject studentJson = (JSONObject) userDb.getObjectById(student.getUserId());
-        if (studentJson == null) return;
 
-        JSONArray certificates = studentJson.optJSONArray("certificates");
-        if (certificates == null) certificates = new JSONArray();
 
-        for(int i=0;i<certificates.length();i++){
-            JSONObject c = certificates.getJSONObject(i);
-            if(c.getString("courseId").equals(course.getCourseID())){
+
+        Student loaded = (Student) userDb.getObjectById(student.getUserId());
+        if (loaded == null) return;
+
+
+        JSONObject studentJson = loaded.toJson();
+
+
+        JSONArray certs = studentJson.optJSONArray("certificates");
+        if (certs == null) certs = new JSONArray();
+
+
+        for (int i = 0; i < certs.length(); i++) {
+            JSONObject c = certs.getJSONObject(i);
+            if (c.getString("courseId").equals(course.getCourseID())) {
                 return;
             }
         }
 
-        JSONObject certificate = new JSONObject();
-        certificate.put("certificateId", UUID.randomUUID().toString());
-        certificate.put("studentId", student.getUserId());
-        certificate.put("courseId", course.getCourseID());
-        certificate.put("issueDate", LocalDate.now().toString());
 
-        certificates.put(certificate);
-        studentJson.put("certificates", certificates);
+        JSONObject cert = new JSONObject();
+        cert.put("certificateId", UUID.randomUUID().toString());
+        cert.put("studentId", loaded.getUserId());
+        cert.put("courseId", course.getCourseID());
+        cert.put("issueDate", LocalDate.now().toString());
 
-        userDb.updateObject(User.fromJson(studentJson), User.fromJson(studentJson).toJson());
+
+        certs.put(cert);
+        studentJson.put("certificates", certs);
+
+
+        Student updated = Student.fromJsonToStudent(studentJson);
+        userDb.updateObject(loaded, updated);
     }
 
     private List<Student> getAllStudents() {
@@ -80,8 +100,10 @@ public class CertificateManager {
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject obj = array.getJSONObject(i);
-            if (obj.getString("role").equals("student")) {
-                students.add((Student) User.fromJson(obj));
+            String role = obj.optString("role", "");
+            if ("student".equalsIgnoreCase(role)) {
+
+                students.add(Student.fromJsonToStudent(obj));
             }
         }
         return students;

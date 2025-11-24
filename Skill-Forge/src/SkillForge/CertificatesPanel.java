@@ -1,8 +1,10 @@
 package SkillForge;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.FileWriter;
+import java.io.IOException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,95 +12,129 @@ public class CertificatesPanel extends JFrame {
 
     private Student student;
     private CertificateManager certificateManager;
+
+    // المكونات من الـ .form
+    private JPanel mainPanel;
     private JLabel CertificateName;
-    private JLabel StudentLabel;
-    private JLabel CourseLabel;
     private JLabel StudentName;
-    private JLabel Signature;
-    private JLabel Date;
-    private JButton downlaodButton;
-    private JLabel CourseID;
+    private JLabel CourseName;
+    private JButton DownlaodButton;
     private JLabel Label1;
     private JLabel Label2;
     private JLabel Label3;
     private JLabel Label4;
     private JLabel Label5;
-    private JLabel Label6;
-
 
     public CertificatesPanel(Student student, CertificateManager certificateManager) {
         this.student = student;
         this.certificateManager = certificateManager;
 
-        initComponents();
-        loadCertificate();
+        // إنشاء الـ JPanel الرئيسي
+        mainPanel = new JPanel();
+        mainPanel.setLayout(null); // هنعمل manual positioning زي التصميم الأصلي
 
-        downlaodButton.addActionListener(e -> downloadCertificate());
-    }
+        // إضافة المكونات
+        CertificateName = new JLabel("C E R T I F I C A T E");
+        CertificateName.setFont(new java.awt.Font("Monotype Corsiva", 1, 28));
+        CertificateName.setBounds(50, 20, 700, 40);
+        CertificateName.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(CertificateName);
 
-    private void initComponents() {
-        setTitle("Certificate");
-        setSize(500, 350);
+        Label1 = new JLabel("------------- OF APPRECIATION --------------");
+        Label1.setFont(new java.awt.Font("Dialog", 0, 15));
+        Label1.setBounds(50, 70, 700, 20);
+        Label1.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(Label1);
+
+        Label2 = new JLabel("THIS CERTIFICATE IS PROUDLY IS PRESENTED TO");
+        Label2.setFont(new java.awt.Font("Dialog", 0, 15));
+        Label2.setBounds(50, 100, 700, 20);
+        Label2.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(Label2);
+
+        StudentName = new JLabel("STUDENT NAME");
+        StudentName.setFont(new java.awt.Font("Lucida Calligraphy", 1, 22));
+        StudentName.setBounds(50, 130, 700, 30);
+        StudentName.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(StudentName);
+
+        Label3 = new JLabel("Congratulations for successfully completing");
+        Label3.setFont(new java.awt.Font("Dialog", 2, 14));
+        Label3.setBounds(50, 170, 700, 20);
+        Label3.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(Label3);
+
+        Label4 = new JLabel("all quizzes and met the graduation requirements for");
+        Label4.setFont(new java.awt.Font("Dialog", 2, 14));
+        Label4.setBounds(50, 190, 700, 20);
+        Label4.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(Label4);
+
+        CourseName = new JLabel("Course Name");
+        CourseName.setFont(new java.awt.Font("Lucida Calligraphy", 1, 22));
+        CourseName.setBounds(50, 220, 700, 30);
+        CourseName.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(CourseName);
+
+        Label5 = new JLabel("SkillForge");
+        Label5.setFont(new java.awt.Font("Freestyle Script", 0, 22));
+        Label5.setBounds(600, 400, 150, 30);
+        mainPanel.add(Label5);
+
+        DownlaodButton = new JButton("Download");
+        DownlaodButton.setBounds(350, 400, 120, 30);
+        mainPanel.add(DownlaodButton);
+
+        setContentPane(mainPanel);
+
+        loadCertificateInfo();
+        setupDownloadButton();
+
+        setTitle("Certificates");
+        setSize(800, 500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLayout(null);
-        getContentPane().setBackground(new Color(250, 250, 210));
-
-        StudentName = new JLabel();
-        StudentName.setFont(new Font("Arial", Font.BOLD, 20));
-        StudentName.setBounds(160, 100, 300, 25);
-        StudentName.setForeground(new Color(0, 102, 204));
-        add(StudentName);
-
-        Date = new JLabel();
-        Date.setFont(new Font("Arial", Font.BOLD, 17));
-        Date.setBounds(200, 235, 300, 20);
-        Date.setForeground(new Color(0, 153, 0));
-        add(Date);
-
-        Signature = new JLabel("Instructor Signature: __________________");
-        Signature.setFont(new Font("Arial", Font.ITALIC, 14));
-        Signature.setBounds(100, 280, 350, 20);
-        add(Signature);
-
-        downlaodButton = new JButton("Download JSON ⬇");
-        downlaodButton.setBounds(180, 310, 160, 25);
-        add(downlaodButton);
-
-        if(certificateManager.getCertificates(student).length() > 0){
-            JSONObject cert = certificateManager.getCertificates(student).getJSONObject(0);
-            CourseID.setText("Course ID: " + cert.getString("courseId"));
-        }
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setVisible(true);
     }
 
-    private void loadCertificate() {
+    private void loadCertificateInfo() {
         JSONArray certs = certificateManager.getCertificates(student);
-        if(certs.length() == 0){
-            JOptionPane.showMessageDialog(this, "No certificates yet");
+        if (certs.length() == 0) {
+            CertificateName.setText("No certificates found!");
+            CourseName.setText("-");
+            StudentName.setText(student.getUserName());
             return;
         }
 
         JSONObject cert = certs.getJSONObject(0);
+        CertificateName.setText("C E R T I F I C A T E");
         StudentName.setText(student.getUserName());
-        Date.setText(cert.getString("issueDate"));
-        Signature.setText("Instructor Signature: __________________");
+
+        CourseJsonDatabase courseDatabase = new CourseJsonDatabase("courses.json");
+        Course course = (Course) courseDatabase.getObjectById(cert.getString("courseId"));
+        CourseName.setText(course.getCourseTitle());
     }
 
-    private void downloadCertificate() {
-        JSONArray certs = certificateManager.getCertificates(student);
-        if(certs.length() == 0) return;
+    private void setupDownloadButton() {
+        DownlaodButton.addActionListener((ActionEvent e) -> {
+            JSONArray certs = certificateManager.getCertificates(student);
+            if (certs.length() == 0) return;
 
-        JSONObject cert = certs.getJSONObject(0);
+            JSONObject cert = certs.getJSONObject(0);
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setSelectedFile(new java.io.File("Certificate_" + cert.getString("certificateId") + ".json"));
-        if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-            try(FileWriter fw = new FileWriter(fileChooser.getSelectedFile())){
-                fw.write(cert.toString(4));
-                JOptionPane.showMessageDialog(this, "Certificate saved as JSON!");
-            } catch(Exception ex){
-                JOptionPane.showMessageDialog(this, "Error saving JSON: " + ex.getMessage());
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setSelectedFile(new java.io.File(
+                    "Certificate_" + cert.getString("certificateId") + ".json"
+            ));
+
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try (FileWriter writer = new FileWriter(fileChooser.getSelectedFile())) {
+                    writer.write(cert.toString(4));
+                    JOptionPane.showMessageDialog(this, "Certificate downloaded successfully!");
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error saving file!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
+        });
     }
 }

@@ -57,7 +57,10 @@ public class CourseAnalytics {
 
         for (Student student : this.courseStudents) {
             if (student.getQuizResults().containsKey(quizId)) {
-                totalScore += student.getQuizResults().get(quizId);
+                QuizAttemptData data = student.getQuizResults().get(quizId);
+                if (data != null) {
+                    totalScore += data.getBestScore();
+                }
                 studentCount++;
             }
         }
@@ -86,7 +89,8 @@ public class CourseAnalytics {
         for (Student student : this.courseStudents) {
             boolean passedAllQuizzes = true;
             for (String quizId : quizIds) {
-                if (!student.getQuizResults().containsKey(quizId) || student.getQuizResults().get(quizId) < 50) {
+                QuizAttemptData data = student.getQuizResults().get(quizId);
+                if (data == null || data.getBestScore() < 50) {
                     passedAllQuizzes = false;
                     break;
                 }

@@ -39,8 +39,8 @@ public class CertificateManager {
         if(course == null) return false;
         for (Lesson lesson : course.getLessons()) {
             if (lesson.getQuiz() != null) {
-                Integer score = student.getQuizResults().get(lesson.getLessonID());
-                if (score == null || score < 50) {
+                QuizAttemptData data = student.getQuizResults().get(lesson.getLessonID());
+                if (data == null || data.getBestScore() < 50) {
                     return false;
                 }
             }

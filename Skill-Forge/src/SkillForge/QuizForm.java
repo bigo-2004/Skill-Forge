@@ -150,7 +150,7 @@ public class QuizForm extends JFrame {
     private void submitQuiz() {
         saveAnswer();
         Hashtable<String, String> studentAnswersMap = new Hashtable<>();
-        int x = 0;
+        int correctCount = 0;
 
         for (int i = 0; i < questions.size(); i++) {
             Question q = questions.get(i);
@@ -159,27 +159,38 @@ public class QuizForm extends JFrame {
             if (!studentChoice.trim().isEmpty()) {
                 studentAnswersMap.put(q.getQuestionId(), studentChoice);
                 if (q.getCorrectAnswer().equals(studentChoice)) {
-                    x++;
+                    correctCount++;
                 }
             }
         }
 
         int finalScorePercentage = 0;
-
         if (!questions.isEmpty()) {
             finalScorePercentage = QuizService.quizMarks(quiz, studentAnswersMap);
         }
-
         boolean passed = QuizService.isPassed(finalScorePercentage);
+
         try {
             UserJsonDatabase userDb = new UserJsonDatabase("users.json");
             Student studentOld = (Student) student;
             Student studentNew = Student.fromJsonToStudent(studentOld.toJson());
-            String quizIdKey = lesson.getQuiz().getQuizId();
-            studentNew.getQuizResults().put(quizIdKey, finalScorePercentage);
+
+            String lessonKey = lesson.getLessonID();
+
+            if (!studentNew.canAttemptQuiz(lessonKey)) {
+                JOptionPane.showMessageDialog(this,
+                        "You cannot attempt this quiz anymore. Either you've passed it already or you've used both allowed attempts.",
+                        "Attempt Not Allowed", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            studentNew.recordQuizAttempt(lessonKey, finalScorePercentage);
+
             userDb.updateObject(studentOld, studentNew);
+
             studentOld.setQuizResults(studentNew.getQuizResults());
-            showResults(x, questions.size(), finalScorePercentage, passed);
+
+            showResults(correctCount, questions.size(), finalScorePercentage, passed);
             dispose();
 
         } catch (Exception ex) {

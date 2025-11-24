@@ -101,7 +101,9 @@ public class ChartFrame extends JFrame {
         for (Student student : students) {
             for (String quizId : quizIds) {
                 if (student.getQuizResults().containsKey(quizId)) {
-                    int score = student.getQuizResults().get(quizId);
+                    QuizAttemptData data = student.getQuizResults().get(quizId);
+                    int score = (data != null) ? data.getBestScore() : 0;
+
                     if (score >= PASSING_SCORE) {
                         totalPasses++;
                     } else {

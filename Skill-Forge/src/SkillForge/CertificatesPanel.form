@@ -29,7 +29,7 @@
         </constraints>
         <properties>
           <font size="15"/>
-          <text value="_____________ OF APPRECIATION _____________"/>
+          <text value="------------- OF APPRECIATION --------------"/>
         </properties>
       </component>
       <component id="50a56" class="javax.swing.JLabel" binding="Label2">

@@ -13,7 +13,6 @@ public class CertificatesPanel extends JFrame {
     private Student student;
     private CertificateManager certificateManager;
 
-    // المكونات من الـ .form
     private JPanel mainPanel;
     private JLabel CertificateName;
     private JLabel StudentName;
@@ -24,16 +23,16 @@ public class CertificatesPanel extends JFrame {
     private JLabel Label3;
     private JLabel Label4;
     private JLabel Label5;
+    private JPanel mainpanel;
 
     public CertificatesPanel(Student student, CertificateManager certificateManager) {
         this.student = student;
         this.certificateManager = certificateManager;
 
-        // إنشاء الـ JPanel الرئيسي
         mainPanel = new JPanel();
-        mainPanel.setLayout(null); // هنعمل manual positioning زي التصميم الأصلي
+        mainPanel.setLayout(null);
+        setSize(800, 450);
 
-        // إضافة المكونات
         CertificateName = new JLabel("C E R T I F I C A T E");
         CertificateName.setFont(new java.awt.Font("Monotype Corsiva", 1, 28));
         CertificateName.setBounds(50, 20, 700, 40);
@@ -78,11 +77,11 @@ public class CertificatesPanel extends JFrame {
 
         Label5 = new JLabel("SkillForge");
         Label5.setFont(new java.awt.Font("Freestyle Script", 0, 22));
-        Label5.setBounds(600, 400, 150, 30);
+        Label5.setBounds(600, 300, 150, 30);
         mainPanel.add(Label5);
 
         DownlaodButton = new JButton("Download");
-        DownlaodButton.setBounds(350, 400, 120, 30);
+        DownlaodButton.setBounds(350, 330, 120, 30);
         mainPanel.add(DownlaodButton);
 
         setContentPane(mainPanel);
@@ -91,7 +90,6 @@ public class CertificatesPanel extends JFrame {
         setupDownloadButton();
 
         setTitle("Certificates");
-        setSize(800, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);

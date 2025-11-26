@@ -95,23 +95,34 @@ public class CertificatesPanel extends JFrame {
         setVisible(true);
     }
 
-    private void loadCertificateInfo() {
+    private JSONObject getCertificateForCourse(Student student, String courseId) {
         JSONArray certs = certificateManager.getCertificates(student);
-        if (certs.length() == 0) {
-            CertificateName.setText("No certificates found!");
-            CourseName.setText("-");
+
+        for (int i = 0; i < certs.length(); i++) {
+            JSONObject cert = certs.getJSONObject(i);
+            if (cert.getString("courseId").equals(courseId)) {
+                return cert;
+            }
+        }
+        return null;
+    }
+
+    private void loadCertificateInfo() {
+
+        JSONObject cert = getCertificateForCourse(student,certificateManager.getCourse().courseID);
+
+        if (cert == null) {
+            CertificateName.setText("No certificate for this course!");
+            CourseName.setText(certificateManager.getCourse().getCourseTitle());
             StudentName.setText(student.getUserName());
             return;
         }
 
-        JSONObject cert = certs.getJSONObject(0);
         CertificateName.setText("C E R T I F I C A T E");
         StudentName.setText(student.getUserName());
-
-        CourseJsonDatabase courseDatabase = new CourseJsonDatabase("courses.json");
-        Course course = (Course) courseDatabase.getObjectById(cert.getString("courseId"));
-        CourseName.setText(course.getCourseTitle());
+        CourseName.setText(certificateManager.getCourse().getCourseTitle());
     }
+
 
     private void setupDownloadButton() {
         DownlaodButton.addActionListener((ActionEvent e) -> {

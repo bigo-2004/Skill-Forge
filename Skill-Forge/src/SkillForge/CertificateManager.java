@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class CertificateManager {
+    public Course getCourse() {
+        return course;
+    }
 
     private Course course;
     private UserJsonDatabase userDb;
